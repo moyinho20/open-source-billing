@@ -14,6 +14,7 @@
           <div class="select-invoice-client">
             <span class="label-font intro invoices-new-false-intro" data-intro = 'Here you can select the client for which you are creating invoice' data-step= '5'><%= t('views.clients.client') %> </span>
             <% selected_client = @client.present? ? @client.id : f.object.client_id %>
+            
             <%= f.select :client_id, ("<option value='-1'>#{t('views.common.add_new')}</option>".html_safe+options_for_select((load_clients(action_name, invoice.company_id)),
                                                                                                                               selected: selected_client)),
                          {prompt: t('views.invoices.select_client'), include_blank: false}, data: {action_path: new_client_path}, class: 'add_link_select invoice-client-select form_select_2' %>
@@ -43,7 +44,6 @@
           <div class="paymentInfo">
             <strong><strong class="invoice_total_strong" currency="<%= Currency.find(invoice_selected_currency(f.object)).code %>"></strong>
               <% selected_currency = invoice_selected_currency(f.object) %>
-              <%# binding.pry %>
 
               <%= f.input :currency_id, collection: Currency.unscoped.collect{|c| [c.unit,c.id] }, selected: selected_currency,
                           include_blank: false, input_html: { class: 'inline-select currency-select', disabled: currency_is_off? }, wrapper_tag: :small, label: false %>
@@ -100,7 +100,6 @@
                   <%= rs.input :frequency_repetition,  collection: 1..12, label: false, input_html: {class: 'custom_frequency'} %>
                   <%= rs.input :frequency_type,  collection: OFTEN_LIST, label: false, input_html: {class: 'custom_frequency'} %>
                 </div>
-                <%# binding.pry %>
                 <div id="how-many" class="invoice-input-holder">
                   <%= rs.input :occurrences, as: :radio_buttons, label: 'How Many?',
                                collection: [['-1', 'Infinte'],
@@ -163,7 +162,6 @@
           <%= f.input :discount_type, collection: @discount_types, selected: f.object.discount_type, label: t('Discount(%)'),
                       input_html: { class: 'discount_select inline-select small-select invoice-client-select', id: 'discount_type' },
                       wrapper_html: { class: 'new-invoice-footer-row' } %>
-
           <%= f.input :tax_id, collection: Tax.all.collect{|t| [t.name, t.id, {'data-tax_percentage'=>t.percentage.to_f}] }, selected: f.object.tax_id,
                       label: t('views.common.tax'), include_blank: t('views.common.select'), wrapper_html: { class: 'new-invoice-footer-row invicetax' },
                       input_html: { class: 'discount_select inline-select small-select form_select_2 invoice_tax_select'} %>
@@ -196,7 +194,6 @@
             <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div>
             <span><%= label_tag '', '0', :id => 'invoice_paid_lbl', :class => 'net_total_value' %></span>
           </strong>
-
           <% if invoice.persisted? %>
             <strong class="invoice-total-title bottom">
               <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div>

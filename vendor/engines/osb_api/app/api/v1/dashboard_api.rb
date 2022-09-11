@@ -52,7 +52,7 @@ module V1
 
       get :current_invoices  do
         @current_invoices = Invoice.by_company(@current_user.current_company)
-                                .where('IFNULL(due_date, invoice_date) >= ?', Date.today).joins(:client)
+                                .where('COALESCE(due_date, invoice_date) >= ?', Date.today).joins(:client)
                                 .joins(:currency).order('due_date DESC').select('invoices.invoice_number, invoices.due_date, invoices.invoice_date,
                                    invoices.invoice_total, clients.organization_name, currencies.unit')
                                 .limit(10)
@@ -69,7 +69,7 @@ module V1
 
       get :past_invoices  do
         @past_invoices = Invoice.by_company(@current_user.current_company)
-                             .where('IFNULL(due_date, invoice_date) < ?', Date.today)
+                             .where('COALESCE(due_date, invoice_date) < ?', Date.today)
                                      .order('due_date DESC').joins(:client).joins(:currency).limit(10).select('invoices.invoice_number, invoices.due_date, invoices.invoice_date,
                                    invoices.invoice_total, clients.organization_name, currencies.unit')
       end
@@ -112,7 +112,7 @@ module V1
            }
 
       get :base_currency_amount_billed_graph do
-        invoices = Invoice.by_company(@current_user.current_company).joins(:currency).where('invoices.invoice_date > ?', 6.months.ago).group('MONTHNAME(invoices.invoice_date)').order('invoice_date asc').sum('base_currency_equivalent_total')
+        invoices = Invoice.by_company(@current_user.current_company).joins(:currency).where('invoices.invoice_date > ?', 6.months.ago).group('EXTRACT (MONTH FROM invoices.invoice_date)').order('invoice_date asc').sum('base_currency_equivalent_total')
         invoices = invoices.map{|k, v|[[Company.find(@current_user.current_company).base_currency.unit, k],v.round(2)]}.to_h
         base_currency_invoices = []
         invoices.each{|k, v| base_currency_invoices << {currency: k[0], month: k[1], amount: v.to_s}}
@@ -170,7 +170,7 @@ module V1
 
       get :invoices_graph do
         @invoices_graph = Invoice.by_company(@current_user.current_company).where('invoices.created_at > ?', 6.months.ago)
-            .joins(:currency).group('currencies.unit').group('MONTHNAME(invoices.invoice_date)').order('invoices.created_at asc').sum('invoices.invoice_total')
+            .joins(:currency).group('currencies.unit').group('EXTRACT (MONTH from invoices.invoice_date)').order('invoices.created_at asc').sum('invoices.invoice_total')
         invoices_graph = []
         @invoices_graph.each { |k,v| invoices_graph << {currency: k[0], month: k[1], amount: v} }
         invoices_graph

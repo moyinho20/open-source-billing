@@ -3,71 +3,71 @@
 #
 # Examples:
 #
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+  # cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
+  # Mayor.create(name: 'Emanuel', city: cities.first)
 
 #users = User.create([
 #    {:email => 'imran@nxb.com.pk', :crypted_password => '9027ed25057cef842561eb3f58739556e09d85f4'},
 #    {:email => 'muhammad.azeem@nxb.com.pk', :crypted_password => '9027ed25057cef842561eb3f58739556e09d85f4'},
 #    {:email => 'sohail.asghar@nxb.com.pk', :crypted_password => '9027ed25057cef842561eb3f58739556e09d85f4'}
 #  ])
-#taxes = Tax.create([{:name => 'VAT', :percentage => 2.5},{:name => 'GST', :percentage => 4}])
-#tax1,tax2 = taxes.first.id,taxes.last.id
+taxes = Tax.create([{:name => 'GST@5%', :percentage => 5},{:name => 'GST@18%', :percentage => 18}])
+tax1,tax2 = taxes.first.id,taxes.last.id
 #
-#items = Item.create([{
-#      :item_name => 'Item 1',
-#      :item_description => 'Development',
-#      :unit_cost => '400',
-#      :quantity => 1,
-#      :tax_1 => tax1,
-#      :tax_2 => tax2,
-#      :track_inventory => true},{
-#      :item_name => 'Item 2',
-#      :item_description => 'Development',
-#      :unit_cost => '300',
-#      :quantity => 1,
-#      :tax_1 => tax1,
-#      :tax_2 => tax2,
-#      :track_inventory => true}])
-#item1,item2 = items.first.id, items.last.id
+items = Item.create([{
+     :item_name => 'Item 1',
+     :item_description => 'Development',
+     :unit_cost => '400',
+     :quantity => 1,
+     :tax_1 => tax1,
+     :tax_2 => tax2,
+     :track_inventory => true},{
+     :item_name => 'Item 2',
+     :item_description => 'Development',
+     :unit_cost => '300',
+     :quantity => 1,
+     :tax_1 => tax1,
+     :tax_2 => tax2,
+     :track_inventory => true}])
+item1,item2 = items.first.id, items.last.id
+
+client = Client.create(
+ :organization_name => 'NXB',
+ :email => 'imran@nxb.com.pk',
+ :first_name => 'Hyper',
+ :last_name => 'Conversion',
+ :home_phone => '000000',
+ :mobile_number => '111111',
+ :send_invoice_by => 'email',
+ :country => 'Pakistan')
+
+invoice = Invoice.create(
+ :invoice_number => '00001',
+ :invoice_date => Date.today,
+ :discount_percentage => 10,
+ :client_id => client.id,
+ :terms => 'none',
+ :notes => 'none',
+ :sub_total => 700,
+ :discount_amount => -70,
+ :tax_amount => 37,
+ :invoice_total => 667
+)
 #
-#client = Client.create(
-#  :organization_name => 'NXB',
-#  :email => 'imran@nxb.com.pk',
-#  :first_name => 'Hyper',
-#  :last_name => 'Conversion',
-#  :home_phone => '000000',
-#  :mobile_number => '111111',
-#  :send_invoice_by => 'email',
-#  :country => 'Pakistan')
-#
-#invoice = Invoice.create(
-#  :invoice_number => '00001',
-#  :invoice_date => Date.today,
-#  :discount_percentage => 10,
-#  :client_id => client.id,
-#  :terms => 'none',
-#  :notes => 'none',
-#  :sub_total => 700,
-#  :discount_amount => -70,
-#  :tax_amount => 37,
-#  :invoice_total => 667
-#)
-#
-#InvoiceLineItem.create([{
-#      :invoice_id => invoice.id,
-#      :item_id => item1,
-#      :item_unit_cost => 400,
-#      :item_quantity => 1,
-#      :tax_1 => tax1,
-#      :tax_2 => tax2},{
-#      :invoice_id => invoice.id,
-#      :item_id => item2,
-#      :item_unit_cost => 300,
-#      :item_quantity => 1,
-#      :tax_1 => tax2,
-#      :tax_2 => tax1
-#    }])
+InvoiceLineItem.create([{
+     :invoice_id => invoice.id,
+     :item_id => item1,
+     :item_unit_cost => 400,
+     :item_quantity => 1,
+     :tax_1 => tax1,
+     :tax_2 => tax2},{
+     :invoice_id => invoice.id,
+     :item_id => item2,
+     :item_unit_cost => 300,
+     :item_quantity => 1,
+     :tax_1 => tax2,
+     :tax_2 => tax1
+   }])
 EmailTemplate.delete_all
 ActiveRecord::Base.connection.execute("TRUNCATE email_templates")
 CompanyEmailTemplate.delete_all
@@ -250,7 +250,7 @@ Money::Currency.all.collect{|x| sample_currencies << {code: x.symbol,unit: x.iso
 Currency.create(sample_currencies)
 
 # set default currencies to clients
-default_currency = (Currency.where(unit: 'USD').first || Currency.first)
+default_currency = (Currency.where(unit: 'INR').first || Currency.first)
 Client.where(currency_id: nil).update_all(currency_id: default_currency.id)
 Invoice.where(currency_id: nil).update_all(currency_id: default_currency.id)
 RecurringProfile.where(currency_id: nil).update_all(currency_id: default_currency.id)
@@ -284,6 +284,7 @@ PaymentTerm.create(number_of_days: 7, description: "Weekly")
 PaymentTerm.create(number_of_days: 30, description: "Monthly")
 PaymentTerm.create(number_of_days: -1, description: "Custom")
 PaymentTerm.create(number_of_days: 0, description: "Due on received")
+PaymentTerm.create(number_of_days: nil, description: "custom")
 
 Settings.delete_all
 Settings.currency = "On"
@@ -293,16 +294,16 @@ Settings.invoice_number_format = "{{invoice_number}}"
 Settings.invoice_item_format = "{{item_description}}"
 
 Account.delete_all
-Account.create(org_name: 'OpenSourceBilling')
+Account.create(org_name: 'Shri Associates')
 
 Company.delete_all
-Company.create(company_name: Account.first.org_name, account_id: Account.first.id)
+Company.create(company_name: "Shri Associates", account_id: Account.first.id)
 
 User.destroy_all
 u=User.new
-u.email = "admin@opensourcebilling.org"
-u.password = "opensourcebilling"
-u.password_confirmation = "opensourcebilling"
+u.email = "admin@shriassociates.com"
+u.password = "opensourcebilling1234567890testpassword"
+u.password_confirmation = "opensourcebilling1234567890testpassword"
 u.user_name = "OSB"
 u.role_id = Role.first.id
 u.have_all_companies_access = true

@@ -38,18 +38,18 @@ module Reporting
         # Report columns Client name, January to December months (12 columns)
         # Prepare 12 (month) columns for payment total against each month
         month_wise_payment = []
-        (@report_criteria.from_month..@report_criteria.to_month).each { |month| month_wise_payment << "SUM(CASE WHEN MONTH(IFNULL(i.due_date, i.invoice_date)) = #{month} THEN i.invoice_total ELSE NULL END) AS #{Date::MONTHNAMES[month]}" }
+        (@report_criteria.from_month..@report_criteria.to_month).each { |month| month_wise_payment << "SUM(CASE WHEN MONTH(COALESCE(i.due_date, i.invoice_date)) = #{month} THEN i.invoice_total ELSE NULL END) AS #{Date::MONTHNAMES[month]}" }
         month_wise_payment = month_wise_payment.join(", \n")
         client_filter = @report_criteria.client_id == 0 ? "" : " AND i.client_id = #{@report_criteria.client_id}"
         current_company = @report_criteria.company_id.present? ? "AND i.company_id = #{@report_criteria.company_id}" : ""
         Payment.find_by_sql("
                 SELECT case when c.organization_name = '' then CONCAT(c.first_name,' ',c.last_name) else c.organization_name end as organization_name, #{month_wise_payment},
                 SUM(i.invoice_total) AS client_total,
-                IFNULL(cr.unit,'USD') AS currency_code,
-                IFNULL(i.currency_id,0) AS currency_id
+                COALESCE(cr.unit,'USD') AS currency_code,
+                COALESCE(i.currency_id,0) AS currency_id
                 FROM invoices i INNER JOIN clients c ON i.client_id = c.id INNER JOIN currencies cr ON i.currency_id = cr.id
-                WHERE YEAR(IFNULL(i.due_date, i.invoice_date)) = #{@report_criteria.year}
-                      AND MONTH(IFNULL(i.due_date, i.invoice_date)) >= #{@report_criteria.from_month} AND MONTH(IFNULL(i.due_date, i.invoice_date)) <= #{@report_criteria.to_month}
+                WHERE YEAR(COALESCE(i.due_date, i.invoice_date)) = #{@report_criteria.year}
+                      AND MONTH(COALESCE(i.due_date, i.invoice_date)) >= #{@report_criteria.from_month} AND MONTH(COALESCE(i.due_date, i.invoice_date)) <= #{@report_criteria.to_month}
                       AND i.status <> 'draft'
                       AND i.deleted_at IS NULL
                       #{current_company}

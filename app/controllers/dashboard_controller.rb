@@ -51,7 +51,6 @@ class DashboardController < ApplicationController
   def prepare_charts_data
     @current_company_invoices = Invoice.by_company(current_company).joins(:currency)
     @current_company_payments = Payment.by_company(current_company).joins(:currency)
-    # binding.pry
     @current_company_id = get_company_id
     @current_company = Company.find @current_company_id
     @currenct_company_base_currency = @current_company.base_currency
@@ -59,29 +58,27 @@ class DashboardController < ApplicationController
 
 
     prepare_base_currency_charts_data
-    prepare_multi_currency_charts_data
+    # prepare_multi_currency_charts_data
 
     @currencies_chart_data = @current_company_invoices.group('currencies.unit').count
   end
 
   def prepare_base_currency_charts_data
-    @invoices_chart_data_base = @current_company_invoices.where('invoices.invoice_date > ?', 6.months.ago).order('invoice_date asc').group('MONTHNAME(invoices.invoice_date)').sum('invoices.base_currency_equivalent_total')
+    @invoices_chart_data_base = @current_company_invoices.where('invoices.invoice_date > ?', 6.months.ago).group('EXTRACT (MONTH FROM invoices.invoice_date)').sum('invoices.base_currency_equivalent_total')
     @invoices_chart_data_base = @invoices_chart_data_base.map{|k, v| [[@currenct_company_base_currency.unit, k],v] }.to_h
   end
 
   def prepare_multi_currency_charts_data
-    invoices_chart_data = @current_company_invoices.where('invoices.invoice_date > ?', 6.months.ago).order('invoice_date asc').group('currencies.unit').group('MONTHNAME(invoices.invoice_date)').sum('invoices.invoice_total')
+    invoices_chart_data = @current_company_invoices.where('invoices.invoice_date > ?', 6.months.ago).group('currencies.unit').group('EXTRACT (MONTH FROM invoices.invoice_date)').select("EXTRACT (MONTH FROM invoices.invoice_date), sum(invoices.invoice_total)")
     currencies = invoices_chart_data.keys.collect{|a| a.first}.uniq
     @invoices_chart_data = {}
     currencies.each do |currency|
       5.downto(0) do |n|
         month = Date::MONTHNAMES[(Date.today - n.months).month]
-        # binding.pry
-        invoices_chart_data[[currency, month]].nil? ? @invoices_chart_data.merge!({[currency, month] => 0.0}) : @invoices_chart_data.merge!({[currency, month] => invoices_chart_data[[currency, month]]})
-      end
+      
     end
 
-    payments_chart_data = @current_company_payments.where('payments.created_at > ?', 6.months.ago).order('payments.created_at asc').group('currencies.unit').group('MONTHNAME(payments.created_at)').sum('payments.payment_amount')
+    payments_chart_data = @current_company_payments.where('payments.created_at > ?', 6.months.ago).group('currencies.unit').group('EXTRACT (MONTH FROM payments.created_at)').select("EXTRACT (MONTH FROM invoices.invoice_date), sum(payments.payment_amount)")
     currencies = invoices_chart_data.keys.collect{|a| a.first}.uniq
     @payments_chart_data = {}
     currencies.each do |currency|

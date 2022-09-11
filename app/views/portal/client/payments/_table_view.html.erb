@@ -14,7 +14,7 @@
           </th>
           <th class="align_left header"><%= sortable('created_at', t('client / Inv #')) %></th>
           <th class="align_center header <%= sortable_class('payment_date') %>"><%= sortable('payment_date', t('views.common.date')) %></th>
-          <th class="align_center header <%= sortable_class('IFNULL(payment_method,payment_type)') %>"><%= sortable('IFNULL(payment_method,payment_type)', t('views.common.type')) %></th>
+          <th class="align_center header <%= sortable_class('COALESCE(payment_method,payment_type)') %>"><%= sortable('COALESCE(payment_method,payment_type)', t('views.common.type')) %></th>
           <th width="15%" class="align_center header sorting {sorter:'thousands'} <%= sortable_class('payment_amount') %>"><%= sortable('payment_amount', t('amount')) %></th>
         </tr>
         </thead>

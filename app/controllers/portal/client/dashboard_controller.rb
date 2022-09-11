@@ -29,7 +29,7 @@ module Portal
       end
 
       def prepare_multi_currency_charts_data
-        invoices_chart_data = @current_client_invoices.where('invoices.invoice_date > ?', 6.months.ago).order('invoice_date asc').group('currencies.unit').group('MONTHNAME(invoices.invoice_date)').sum('invoices.invoice_total')
+        invoices_chart_data = @current_client_invoices.where('invoices.invoice_date > ?', 6.months.ago).order('invoice_date asc').group('currencies.unit').group('EXTRACT (MONTH FROM invoices.invoice_date)').sum('invoices.invoice_total')
         currencies = invoices_chart_data.keys.collect{|a| a.first}.uniq
         @client_invoices_chart_data = {}
         currencies.each do |currency|
@@ -39,7 +39,7 @@ module Portal
           end
         end
 
-        payments_chart_data = @current_client_payments.where('payments.created_at > ?', 6.months.ago).order('payments.created_at asc').group('currencies.unit').group('MONTHNAME(payments.created_at)').sum('payments.payment_amount')
+        payments_chart_data = @current_client_payments.where('payments.created_at > ?', 6.months.ago).order('payments.created_at asc').group('currencies.unit').group('EXTRACT (MONTH FROM payments.created_at)').sum('payments.payment_amount')
         currencies = invoices_chart_data.keys.collect{|a| a.first}.uniq
         @client_payments_chart_data = {}
         currencies.each do |currency|

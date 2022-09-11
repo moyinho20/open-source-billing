@@ -135,15 +135,15 @@ module Reporting
               SELECT
                 clients.organization_name AS client_name,
                 invoices.invoice_total,
-                IFNULL(SUM(payments.payment_amount), 0) payment_received,
-                DATEDIFF('#{Date.today}', DATE(IFNULL(invoices.due_date, invoices.invoice_date))) age,
+                COALESCE(SUM(payments.payment_amount), 0) payment_received,
+                DATEDIFF('#{Date.today}', DATE(COALESCE(invoices.due_date, invoices.invoice_date))) age,
                 invoices.`status`
               FROM `invoices`
                 INNER JOIN `clients` ON `clients`.`id` = `invoices`.`client_id`
                 LEFT JOIN `payments` ON `invoices`.`id` = `payments`.`invoice_id` AND (payments.payment_date <= '#{Date.today}') AND (`payments`.`deleted_at` IS NULL)
               WHERE
                 (`invoices`.`deleted_at` IS NULL)
-                AND (DATE(IFNULL(invoices.due_date, invoices.invoice_date)) <= '#{Date.today}')
+                AND (DATE(COALESCE(invoices.due_date, invoices.invoice_date)) <= '#{Date.today}')
                 AND (invoices.`status` != "paid")
                 #{currency_filter}
                 #{company_filter}

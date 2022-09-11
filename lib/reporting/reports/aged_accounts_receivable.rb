@@ -44,7 +44,7 @@ module Reporting
         # Report columns: Client, 0_30, 31_60, 61_90, Over_90
         condition = <<-SQL
               (`invoices`.`deleted_at` IS NULL)
-              AND (DATE(IFNULL(invoices.due_date, invoices.invoice_date)) <= '#{@report_criteria.to_date}')
+              AND (DATE(COALESCE(invoices.due_date, invoices.invoice_date)) <= '#{@report_criteria.to_date}')
               AND (invoices.`status` != "paid")
               #{@report_criteria.client_id == 0 ? "" : "AND invoices.client_id = #{@report_criteria.client_id}"}
         #{@report_criteria.company_id == "" ? "" : "AND invoices.company_id = #{@report_criteria.company_id}"}
@@ -62,11 +62,11 @@ module Reporting
               case when clients.organization_name = '' then CONCAT(clients.first_name,' ',clients.last_name) else clients.organization_name  end AS client_name,
               invoices.invoice_total,
               invoices.base_currency_equivalent_total,
-              IFNULL(SUM(payments.payment_amount), 0) payment_received,
-              DATEDIFF('#{@report_criteria.to_date}', DATE(IFNULL(invoices.due_date, invoices.invoice_date))) age,
+              COALESCE(SUM(payments.payment_amount), 0) payment_received,
+              DATEDIFF('#{@report_criteria.to_date}', DATE(COALESCE(invoices.due_date, invoices.invoice_date))) age,
               invoices.`status`,
-              IFNULL(currencies.unit,'USD') as currency_code,
-              IFNULL(invoices.currency_id,0) as currency_id,
+              COALESCE(currencies.unit,'USD') as currency_code,
+              COALESCE(invoices.currency_id,0) as currency_id,
               invoices.id as id
             FROM `invoices`
               LEFT JOIN `currencies` ON `currencies`.`id` = `invoices`.`currency_id`
