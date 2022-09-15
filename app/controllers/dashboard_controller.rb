@@ -23,6 +23,7 @@ class DashboardController < ApplicationController
 
   before_action :prepare_charts_data, only: [:index]
   after_action :user_introduction, only: [:index], if: -> { current_user.introduction.present? && !current_user.introduction.dashboard? }
+  
   def index
     @recent_activity = Reporting::Dashboard.get_recent_activity(@currency, @current_company_id).group_by { |d| d[:activity_date] }
     @current_invoices = Invoice.current_invoices(@current_company_id).limit(10)
@@ -48,6 +49,7 @@ class DashboardController < ApplicationController
   end
 
   private
+  
   def prepare_charts_data
     @current_company_invoices = Invoice.by_company(current_company).joins(:currency)
     @current_company_payments = Payment.by_company(current_company).joins(:currency)
@@ -75,7 +77,7 @@ class DashboardController < ApplicationController
     currencies.each do |currency|
       5.downto(0) do |n|
         month = Date::MONTHNAMES[(Date.today - n.months).month]
-      
+      end
     end
 
     payments_chart_data = @current_company_payments.where('payments.created_at > ?', 6.months.ago).group('currencies.unit').group('EXTRACT (MONTH FROM payments.created_at)').select("EXTRACT (MONTH FROM invoices.invoice_date), sum(payments.payment_amount)")
