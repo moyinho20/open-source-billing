@@ -302,8 +302,8 @@ Company.create(company_name: "Shri Associates", account_id: Account.first.id)
 User.destroy_all
 u=User.new
 u.email = "admin@shriassociates.com"
-u.password = "opensourcebilling1234567890testpassword"
-u.password_confirmation = "opensourcebilling1234567890testpassword"
+u.password = "opensourcebilling54656534535testpassword"
+u.password_confirmation = "opensourcebilling54656534535testpassword"
 u.user_name = "OSB"
 u.role_id = Role.first.id
 u.have_all_companies_access = true

@@ -3,8 +3,7 @@ development:
   app_protocol: http
   activemerchant_billing_mode: test
   demo_mode: false
-  #wkhtmltopdf_path: YOUR_WKHTMLTOPDF_PATH  #run "which wkhtmltopdf" you will get path
-  #encryption_key: 49118f49987f2b9271e2b7944c61834215b46680788659bd5079fba8a54394a6ef1e38f7ef85c80b5ef23bbeaece90c822d4e0f88514dc3b2062603924dead17
+  encryption_key: 49118f49987f2b9271e2b7944c61834215b46680788659bd5079fba8a54394a6ef1e38f7ef85c80b5ef23bbeaece90c822d4e0f88514dc3b2062603924dead17
 
   paypal:
     enabled: false
@@ -28,7 +27,6 @@ production:
   app_host: localhost # e.g. osb.mydomain.com
   app_protocol: http
   activemerchant_billing_mode: test
-  wkhtmltopdf_path: YOUR_WKHTMLTOPDF_PATH  #run "which wkhtmltopdf" you will get path
   encryption_key: "h2s6KI/pXHBdTc+nm0X1kbHuQvhpmJOjlRzzHYXqXFDSbt1HJ7vIQiesu3KGGvSB4xQs1MJlAxWm8au9QmE/Fw=="
 
   paypal:

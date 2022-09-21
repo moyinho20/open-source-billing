@@ -1,4 +1,4 @@
-FROM ruby:2.3.7
+FROM ruby:2.7.2
 
 # throw errors if Gemfile has been modified since Gemfile.lock
 # RUN bundle config --global frozen 1
@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -r
 RUN gem install bundler --no-document
 
 WORKDIR /usr/src/osb
-
 
 COPY Gemfile* /usr/src/osb/
 COPY Gemfile Gemfile.lock ./
@@ -29,4 +28,4 @@ COPY ./docker/app/wait-for-it.sh ./docker/app/wait-for-it.sh
 RUN chmod +x ./docker/app/wait-for-it.sh
 
 EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3001", "-e", "production"]

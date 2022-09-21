@@ -119,7 +119,6 @@ class ClientsController < ApplicationController
   # PUT /clients/1
   # PUT /clients/1.json
   def update
-    binding.pry
     @client = Client.find(params[:id])
     authorize @client
     if Client.is_exists?(params[:client][:email], get_association_obj) && @client.email != params[:client][:email]

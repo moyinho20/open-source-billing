@@ -1,18 +1,16 @@
 version: '3'
 services:
-  mysql:
-    image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-#      - MYSQL_HOST=localhost
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=root
-    ports:
-      - '3307:3306'
-    expose:
-      - '3306'
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"
+    environment: 
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+    env_file:
+      - '.env'
   adminer:
     image: adminer
     restart: always
@@ -20,19 +18,26 @@ services:
       - 8080:8080
   redis:
     image: redis
-    command: ["redis-server", "--bind", "redis"]
+    volumes:
+      - ./tmp/redis:/var/lib/redis/data
+      - ./opt/homebrew/etc/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     ports:
       - "6350:6379"
+    env_file:
+      - '.env'
   sidekiq:
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
     depends_on:
-      - mysql
+      - db
       - redis
     links:
-      - mysql:mysql
-      - redis
+      - db:db
+      - redis:redis
+    env_file:
+      - '.env'
     command: bundle exec sidekiq
   web:
     build:
@@ -41,9 +46,10 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - mysql
+      - db
       - redis
       - sidekiq
-#    command: ["./docker/app/wait-for-it.sh", "mysql:3306", "--", "rails", "server", "-b", "0.0.0.0"]
     environment:
       - RAILS_ENV=${RAILS_ENV}
+    env_file:
+      - '.env'
