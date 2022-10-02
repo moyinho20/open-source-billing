@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   #Time::DATE_FORMATS.merge!(:long=> "%B %d, %Y")
   #before_action :authenticate_user_from_token!
   # This is Devise's authentication
-  include Pundit
+  include Pundit::Authorization
   include ApplicationHelper
   include PublicActivity::StoreController
   include PublicActivity::ViewHelpers
