@@ -4,40 +4,20 @@
       <% if @invoice.status == 'paid' %>
         <%= image_tag("paid.png", size: '150x100', class: 'paid-logo') %>
       <% end %>
-      <% if request.format.html? %>
-        <div class="new-invoice-header clearfix">
-          <div class="new-invoice-action-btn right">
-
-            <%= link_to raw("<i class='material-icons'>print</i>"),
-                        {:controller => 'invoices', :action => 'show',
-                         :id => @invoice.hashid, :format => "pdf"},
-                        :target => '_blank', title: t('views.common.print') %>
-            <%= link_to raw("<i class='material-icons'>history</i>"),
-                        {:controller => 'payments', :action => 'payments_history',
-                         id: @invoice.id, encrypted_id: params[:inv_id]},
-                        remote: true unless @invoice.payments.blank? %>
-          </div>
-          <% if @invoice.status != "paid" and OSB::CONFIG::PAYPAL[:enabled] == true %>
-            <span class="pull-right"><%= link_to t('pay_by_paypal'), @invoice.paypal_url("#{OSB::CONFIG::APP_PROTOCOL}://#{OSB::CONFIG::APP_HOST}/en/invoices/#{@invoice.hashid}", "#{OSB::CONFIG::APP_PROTOCOL}://#{OSB::CONFIG::APP_HOST}/en/invoices/paypal_payments", current_user), title: 'Paypal Payment', class: 'btn btn-draft' %></span>
-          <% end %>
-        </div>
-      <% end %>
-      <div class="info-section clearfix container company-info-section">
-        <div class="row">
-          <div class="info-left-section company_resize_logo">
-            <%= image_tag @invoice.company.logo.url if @invoice.company.logo.url.present? %>
-          </div>
-          <div class="info-right-section">
-            <%= Settings.invoice_header_text if Settings.invoice_header_text.present? %>
-          </div>
-        </div>
-        <div class="info-left-section">
-          <%= render partial: 'company_contact_info', locals: {company: @invoice.company} %>
-          <br>
-          <%= render partial: 'client_contact_info', locals: {client: @client} %>
+      <div class="new-invoice-header info-section clearfix container company-info-section">
+        <div class="info-left-section company_resize_logo">
+          <%= image_tag("shri-logo.png") %>
         </div>
         <div class="info-right-section">
+          <%= render partial: 'company_contact_info', locals: {company: @invoice.company} %>
+        </div>
+      </div>
+      <div class="info-section clearfix container company-info-section">
+        <div class="info-left-section">
           <%= render 'invoice_summary' %>
+        </div>
+        <div class="info-right-section">
+          <%= render partial: 'client_contact_info', locals: {client: @invoice.client} %>
         </div>
       </div>
       <div class="container items">

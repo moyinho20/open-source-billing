@@ -3,16 +3,20 @@
     <% if headers %>
       <tr>
         <th class="align_left s_no_col"><%= t('views.common.serial_number') %></th>
-        <th><%= t('views.common.description') %></th>
-        <th class="center-align"><%= t('views.common.unit_cost') %></th>
-        <th class="center-align"><%= t('views.items.quantity') %></th>
-        <% if invoice.has_tax_one? %>
-          <th class="center-align"><%= t('Tax 1') %></th>
-        <% end %>
-        <% if invoice.has_tax_two? %>
-          <th class="center-align"><%= t('Tax 2') %></th>
-        <% end %>
-        <th class="center-align"><%= t('views.common.total') %></th>
+        <th><%= "Product" %></th>
+        <th class="center-align"><%= "Pack" %></th>
+        <th class="center-align"><%= "Quantity" %></th>
+        <th class="center-align"><%= "Batch" %></th>
+        <th class="center-align"><%= "Expiry" %></th>
+        <th class="center-align"><%= "HSN" %></th>
+        <th class="center-align"><%= "MRP" %></th>
+        <th class="center-align"><%= "Rate" %></th>
+        <th class="center-align"><%= "Special Discount" %></th>
+        <th class="center-align"><%= "Discount" %></th>
+        <th class="center-align"><%= "CGST %" %></th>
+        <th class="center-align"><%= "SGST %" %></th>
+        <th class="center-align"><%= "Amount" %> </th>
+        <th class="center-align"><%= "Net Amount" %></th>
       </tr>
     <% end %>
   </thead>
@@ -22,16 +26,24 @@
     <%  items.each do |item| %>
       <tr class="invoice-pdf-row">
         <td class="align_left"><%= @num+=1 %></td>
-        <td class="description"><%= "#{item.formatted_invoice_item}" %></td>
-        <td class="center-align"><%= number_to_currency(item.item_unit_cost, unit: invoice.currency.code) %></td>
+        <td class="align_left"><%= "#{item.item_name}" %></td>
+        <td class="align_left"><%= "#{item.pack}" %></td>
         <td class="center-align"><%= item.item_quantity.to_f %></td>
+        <td class="align_left"><%= "#{item.batch}" %></td>
+        <td class="align_left"><%= "#{item.expiry}" %></td>
+        <td class="align_left"><%= "#{item.hsn}" %></td>
+        <td class="align_left"><%= number_to_currency(item.mrp, unit: invoice.currency.code) %></td>
+        <td class="center-align"><%= number_to_currency(item.rate, unit: invoice.currency.code) %></td>
+        <td class="align_left"><%= item.special_discount %></td>
+        <td class="align_left"><%= item.discount %></td>
         <% if invoice.has_tax_one? %>
           <td class="center-align"><%= "#{Tax.with_deleted.find(item.tax_1).percentage}%" if item.tax_1.present? %></td>
         <% end %>
         <% if invoice.has_tax_two? %>
           <td class="center-align"><%= "#{Tax.with_deleted.find(item.tax_2).percentage}%" if item.tax_2.present?  %></td>
         <% end %>
-        <td class="align_right"><%= number_to_currency(item.item_total_amount, unit: invoice.currency.code) %></td>
+        <td class="align_right"><%= number_to_currency(item.amount, unit: invoice.currency.code) %></td>
+        <td class="align_right"><%= number_to_currency(item.net_amount, unit: invoice.currency.code) %></td>
         <%# binding.pry %>
       </tr>
     <% end %>

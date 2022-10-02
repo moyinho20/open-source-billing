@@ -28,7 +28,7 @@ gem 'kaminari', '0.17.0'
 gem 'acts_as_archival', '1.1.1'
 gem 'paranoia', '2.4.2'
 gem 'daemons', '1.2.3'
-gem 'hashie_rails', '0.0.4'
+gem 'hashie_rails'
 group :development do
   gem 'better_errors', '2.1.1'
   gem "binding_of_caller", ">= 0.6.9"
