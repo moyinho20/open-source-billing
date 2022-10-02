@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_26_104143) do
+ActiveRecord::Schema.define(version: 2022_10_02_075650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,8 +336,6 @@ ActiveRecord::Schema.define(version: 2021_03_26_104143) do
     t.string "item_description"
     t.decimal "item_unit_cost", precision: 10, scale: 2
     t.decimal "item_quantity", precision: 10, scale: 2
-    t.integer "tax_1"
-    t.integer "tax_2"
     t.string "archive_number"
     t.datetime "archived_at"
     t.datetime "deleted_at"
@@ -345,6 +343,14 @@ ActiveRecord::Schema.define(version: 2021_03_26_104143) do
     t.datetime "updated_at", null: false
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.integer "estimate_id"
+    t.string "pack"
+    t.string "batch"
+    t.string "expiry"
+    t.string "hsn"
+    t.decimal "rate"
+    t.decimal "mrp"
+    t.integer "tax_2"
+    t.integer "tax_1"
   end
 
   create_table "invoice_tasks", force: :cascade do |t|
@@ -401,8 +407,6 @@ ActiveRecord::Schema.define(version: 2021_03_26_104143) do
     t.string "item_description"
     t.decimal "unit_cost", precision: 10, scale: 2
     t.decimal "quantity", precision: 10, scale: 2
-    t.integer "tax_1"
-    t.integer "tax_2"
     t.boolean "track_inventory"
     t.integer "inventory"
     t.string "archive_number"
@@ -413,6 +417,17 @@ ActiveRecord::Schema.define(version: 2021_03_26_104143) do
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.string "provider"
     t.string "provider_id"
+    t.integer "tax_2"
+    t.integer "tax_1"
+  end
+
+  create_table "line_item_discouts", force: :cascade do |t|
+    t.bigint "invoice_line_item_id"
+    t.integer "discount_type"
+    t.decimal "amount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_line_item_id"], name: "index_line_item_discouts_on_invoice_line_item_id"
   end
 
   create_table "line_item_taxes", force: :cascade do |t|
@@ -790,6 +805,7 @@ ActiveRecord::Schema.define(version: 2021_03_26_104143) do
   add_foreign_key "clients", "roles"
   add_foreign_key "introductions", "clients"
   add_foreign_key "introductions", "users"
+  add_foreign_key "line_item_discouts", "invoice_line_items"
   add_foreign_key "mail_configs", "companies"
   add_foreign_key "permissions", "roles"
   add_foreign_key "users", "roles"
