@@ -71,10 +71,6 @@
             <span><strong><%= t('views.invoices.subtotal') %></strong></span>
             <span><strong><%= number_to_currency(invoice.sub_total, unit: invoice.currency.present? ? invoice.currency.code : '$') %></strong></span>
           </div>
-          <div class="table-row">
-            <span><%= t('views.common.discount') %> <%= invoice.discount_percentage %><%= invoice.discount_type %></span>
-            <span><%= number_to_currency(invoice.discount_amount, unit: invoice.currency.present? ? invoice.currency.code : '$') %></span>
-          </div>
           <% if invoice.tax.present? %>
             <div class="table-row">
               <span><%= t('views.common.tax') %>: <%= invoice.tax.name %> <%= invoice.tax.percentage %>% </span>

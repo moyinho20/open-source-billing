@@ -575,23 +575,13 @@ class Invoice < ApplicationRecord
 
   def update_line_item_discounts(line_items)
     line_items_hash = line_items.values.each do |item|
-      destroy_item = item.delete("_destroy")
+      next if item["item_id"].to_i == 0 || item["item_quantity"].to_i == 0
+      special_discount_type = item.delete('special_discount_type')
       line_item_discount = item.delete("line_item_discount").to_f
-      special_discount_type = item.delete("special_discount")
-      if special_discount_type == "1"
-        item['actual_price'] = 0 
-      else
-        item['actual_price'] = item["rate"].to_f * (1 - line_item_discount/100.0)
-      end
-      line_item_record = InvoiceLineItem.find_or_initialize_by(item)
-      line_item_record.save
-      if line_item_discount > 0 || special_discount_type != "0"
-        discount_record = line_item_record.line_item_discounts.find_or_initialize_by(discount_type: special_discount_type.to_i)
-        if special_discount_type == "0" 
-          discount_record.amount = line_item_discount
-        else
-          discount_record.amount = 100
-        end
+      line_item_record = self.invoice_line_items.select{|i| i.item_id == item['item_id'].to_i && i.item_quantity == item['item_quantity'].to_i}[0]
+      if line_item_record.present? 
+        line_item_record.update(:actual_price => item["rate"].to_f * (1 - 0.01* line_item_discount))
+        discount_record = line_item_record.line_item_discounts.find_or_initialize_by(discount_type: special_discount_type, amount: line_item_discount)
         discount_record.save!
       end
     end 
@@ -610,4 +600,5 @@ class Invoice < ApplicationRecord
     }
     Settings.invoice_number_format.gsub(/\{\{(.*?)\}\}/) {|m| param_values[$1] }
   end
+
 end

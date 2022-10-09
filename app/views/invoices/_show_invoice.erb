@@ -55,7 +55,7 @@
               <strong class="invoice-total-title"><%= t('views.invoices.amount_due') %></strong>
             </div>
             <div class="invoice-total-right">
-              <strong class="invoice-total-title"><%=  @invoice.currency.unit %> <span><%= number_to_currency(@invoice.sub_total, unit: @invoice.currency.code ) %></span></strong>
+              <strong class="invoice-total-title"><%=  @invoice.currency.unit %> <span><%= number_to_currency(@invoice.discounted_total, unit: @invoice.currency.code ) %></span></strong>
 
               <% if @invoice.discount_percentage.present? %>
                 <div class="new-invoice-footer-row">

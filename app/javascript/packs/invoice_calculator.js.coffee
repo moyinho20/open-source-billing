@@ -40,29 +40,29 @@ class window.InvoiceCalculator
       discount_amount += parseFloat(line_discount)
       tax_amount += applyTax((line_total - line_discount), container)
 
-    $('#invoice_sub_total_lbl').text(total.toFixed(2))
-    $('#f_sub_total').text(total.toFixed(2))
-    $('#f_invoice_discount').text(discount_amount.toFixed(2))
-    $('#f_tax_amount').text(tax_amount.toFixed(2))
+    $('#invoice_sub_total_lbl').text (total - discount_amount)
+    $('#invoice_sub_total').val (total - discount_amount)
 
-    $('#invoice_invoice_total').text net_total.toFixed(2)
-    $('#invoice_total_lbl').text net_total.toFixed(2)
-    $('.invoice_total_strong').html net_total.toFixed(2)
-    $('#invoice_discount_amount').text discount_amount.toFixed(2)
+    $('#invoice_invoice_total').val net_total
+    $('#invoice_total_lbl').text net_total
+    $('.invoice_total_strong').html net_total
+
+    $('#invoice_discount_amount').val (discount_amount * -1).toFixed(2)
     $('#invoice_discount_amount_lbl').text discount_amount.toFixed(2)
+
     $('#tax_amount_lbl').text tax_amount.toFixed(2)
-    $('#invoice_tax_amount').text tax_amount.toFixed(2)
+    $('#invoice_tax_amount').val tax_amount.toFixed(2)
     total_balance = parseFloat(total - discount_amount)
     
     $("#invoice_invoice_tax_amount").val tax_amount
     total_balance += parseFloat(tax_amount)
-    # $('#invoice_invoice_total').val total_balance.toFixed(2)
-    # # $('#invoice_total_lbl').text total_balance.toFixed(2)
-    # $('.invoice_total_strong').html total_balance.toFixed(2)
-    # $('#invoice_total_tax').val (tax_amount + invoice_tax_amount).toFixed(2)
-    # $('#invoice_total_tax').html (tax_amount + invoice_tax_amount).toFixed(2)
-    # $("#invoice_sub_total_lbl, #invoice_total_lbl, .tax_amount, #invoice_total_tax").formatCurrency({symbol: window.currency_symbol})
-    # $('.invoice_total_strong').formatCurrency({symbol: window.currency_symbol})
+    $('#invoice_invoice_total').val net_total.toFixed(2)
+    $('#invoice_total_lbl').text net_total.toFixed(2)
+    $('.invoice_total_strong').html net_total.toFixed(2)
+    $('#invoice_total_tax').val tax_amount.toFixed(2)
+    $('#invoice_total_tax').html tax_amount.toFixed(2)
+    $("#invoice_sub_total_lbl, #invoice_total_lbl, .tax_amount, #invoice_total_tax").formatCurrency({symbol: window.currency_symbol})
+    $('.invoice_total_strong').formatCurrency({symbol: window.currency_symbol})
 
     conversion_rate = $('#invoice_conversion_rate').val()
     invoice_base_currency_equivalent_total = (total_balance / conversion_rate).toFixed(2)

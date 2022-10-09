@@ -32,7 +32,7 @@ class InvoiceLineItem < ApplicationRecord
   acts_as_archival
   acts_as_paranoid
 
-  after_create :save_discounts
+  # after_create :handle_discounts
 
   attr_accessor :tax_one, :tax_two
 
@@ -56,7 +56,7 @@ class InvoiceLineItem < ApplicationRecord
     Settings.invoice_item_format.gsub(/\{\{(.*?)\}\}/) {|m| param_values[$1] }
   end
 
-  def save_discounts
+  def handle_discounts
     unless self.actual_price.to_f == self.rate.to_f || self.line_item_discounts.present?
       if actual_price.to_i == 0
         self.line_item_discounts.create(discount_type: 1, amount: 100)
