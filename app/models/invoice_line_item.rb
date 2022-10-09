@@ -27,11 +27,12 @@ class InvoiceLineItem < ApplicationRecord
   belongs_to :item
   belongs_to :tax1, :foreign_key => 'tax_1', :class_name => 'Tax'
   belongs_to :tax2, :foreign_key => 'tax_2', :class_name => 'Tax'
-
+  has_many :line_item_discounts
   # archive and delete
   acts_as_archival
   acts_as_paranoid
 
+  after_create :save_discounts
 
   attr_accessor :tax_one, :tax_two
 
@@ -47,28 +48,66 @@ class InvoiceLineItem < ApplicationRecord
     Item.unscoped.find_by_id self.item_id
   end
 
-  def item_total
-    item_unit_cost * item_quantity rescue 0.0
-  end
-
-  def item_tax_amount
-    tax_amount = 0
-    return 0 if tax1.blank? and tax2.blank?
-    tax_amount +=  (item_total * tax1.percentage)/100 if tax1.present?
-    tax_amount +=  (item_total * tax2.percentage)/100 if tax2.present?
-    tax_amount
-  end
-
-  def item_total_amount
-    item_tax_amount + item_total
-  end
-
   def formatted_invoice_item
     param_values = {
       'item_name' => (self.item_name),
       'item_description' => (self.item_description)
     }
     Settings.invoice_item_format.gsub(/\{\{(.*?)\}\}/) {|m| param_values[$1] }
+  end
+
+  def save_discounts
+    unless self.actual_price.to_f == self.rate.to_f || self.line_item_discounts.present?
+      if actual_price.to_i == 0
+        self.line_item_discounts.create(discount_type: 1, amount: 100)
+      else
+        self.line_item_discounts.create(discount_type: 0, amount: (100*actual_price/rate.to_f))
+      end
+    end
+  end
+
+  def special_discount_amount
+    amount * line_item_discounts.select{|discount| discount.discount_type == "free_item"}.map{|d| d.amount}.sum/100
+  end
+
+  def discount_amount
+    amount * line_item_discounts.select{|discount| discount.discount_type != "free_item"}.map{|d| d.amount}.sum/100
+  end
+
+  def special_discount
+    line_item_discounts.select{|discount| discount.discount_type == "free_item"}.map{|d| d.amount}.sum
+  end
+
+  def discount
+    line_item_discounts.select{|discount| discount.discount_type != "free_item"}.map{|d| d.amount}.sum
+  end
+
+  def net_amount
+    amount  - special_discount_amount - discount_amount
+  end
+
+  def applyDiscount(line_items_total_with_taxes)
+    discount_amount
+  end
+
+  def amount
+    rate.to_f * item_quantity.to_f
+  end
+
+  def item_total_discount
+    line_item_discounts.sum(&:amount)
+  end
+
+  def item_tax_amount
+    tax_amount = 0
+    return 0 if tax1.blank? and tax2.blank?
+    tax_amount +=  (net_amount * tax1.percentage)/100 if tax1.present?
+    tax_amount +=  (net_amount * tax2.percentage)/100 if tax2.present?
+    tax_amount
+  end
+
+  def total_amount
+    item_tax_amount + net_amount
   end
 
 end

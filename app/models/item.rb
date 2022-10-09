@@ -18,6 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Open Source Billing.  If not, see <http://www.gnu.org/licenses/>.
 #
+#
+#
+# Item has a quantity attribute that is the quantity in a pack. This quantity or pack is also used in invoice_line_item as default pack.
+# Pack does not contribute to line item price. For a line item, amount = rate * quantity
+# Item has relationships with tax. Tax1 and Tax2. This is kept from the legacy code to not change a lot, for now atleast. Tax1 is CGST and Tax2 is SGST. 
+
 class Item < ApplicationRecord
 
   include ItemSearch

@@ -39,33 +39,10 @@
                         input_html: { class: 'date-field-style1 date_picker', id: 'invoice_due_date_picker', value: default_due_date(current_company, f.object) }, as: :string %>
           </div>
           <div class="clearfix"></div>
-
-
-          <div class="paymentInfo">
-            <strong><strong class="invoice_total_strong" currency="<%= Currency.find(invoice_selected_currency(f.object)).code %>"></strong>
-              <% selected_currency = invoice_selected_currency(f.object) %>
-
-              <%= f.input :currency_id, collection: Currency.unscoped.collect{|c| [c.unit,c.id] }, selected: selected_currency,
-                          include_blank: false, input_html: { class: 'inline-select currency-select', disabled: currency_is_off? }, wrapper_tag: :small, label: false %>
-
-              <% if Settings.currency.eql?('On') %>
-                <div class="base-currency-conversion">
-                  <%= f.input :conversion_rate, label: 'Conversion Rate (Base Currency Value)' %>
-
-                  <strong class="invoice_total_base_currency"></strong>
-                  <%= f.input :base_currency_equivalent_total, as: :hidden %>
-                  <%= f.input :base_currency_id, collection: Currency.where(id: current_company_obj.base_currency_id).collect{|c| [c.unit, c.id, {"symbol" => c.code}] }, selected: current_company_obj.base_currency_id,
-                              include_blank: false, input_html: { class: 'inline-select currency-select', disabled: currency_is_off? }, wrapper_tag: :small, label: false %>
-
-                </div>
-              <% end %>
-
-            </strong>
-          </div>
         </div>
         <div class="info-right-section recurring_checkbox" >
 
-          <% has_recurring = invoice.new_record? ? false : !invoice.recurring_schedule.new_record? %>
+          <% has_recurring = false %>
           <%= check_box_tag 'recurring', true, has_recurring, class: 'filled-in' %>
           <label for="recurring" class=" intro invoices-new-false-intro" data-intro = 'Here you can set the recurring procedure for your invoice' data-step= '9'><h6><%= t('views.common.recurring') %></h6></label>
           <div class="" id="recurring_schedule_container">
@@ -136,20 +113,21 @@
         <thead>
         <tr>
           <th>&nbsp;</th>
-          <th class="item_name_width center-align"><%= "Product" %></th>
-          <th class="item_unit_cost_width center-align"><%= "Pack" %></th>
-          <th class="item_quantity_width center-align"><%= t('views.items.quantity') %></th>
-          <th class="item_unit_cost_width center-align"><%= "Batch" %></th>
-          <th class="item_unit_cost_width center-align"><%= "Expiry" %></th>
-          <th class="item_unit_cost_width center-align"><%= "HSN" %></th>
-          <th class="item_unit_cost_width center-align"><%= "MRP" %></th>
-          <th class="item_unit_cost_width center-align"><%= "Rate" %></th>
-          <th class="item_unit_cost_width center-align"><%= "Special Discount" %></th>
-          <th class="item_unit_cost_width center-align"><%= "Discount" %></th>
-          <th class="item_tax_width center-align"><%= "CGST" %> 1</th>
-          <th class="item_tax_width center-align"><%= "SGST" %> 2</th>
-          <th class="item_total_width center-align"><%= "Amount" %></th>
-          <th class="item_total_width center-align"><%= "Net Amount" %></th>
+          <th class=" center-align"><%= "Product" %></th>
+          <th class=" center-align"><%= "Pack" %></th>
+          <th class=" center-align"><%= "Quantity" %></th>
+          <th class=" center-align"><%= "Batch" %></th>
+          <th class=" center-align"><%= "Expiry" %></th>
+          <th class=" center-align"><%= " HSN " %></th>
+          <th class=" center-align"><%= " MRP " %></th>
+          <th class=" center-align"><%= " __Rate__" %></th>
+          <th class=" center-align"><%= "Spl.Disc." %></th>
+          <th class=" center-align"><%= "Disc%" %></th>
+          <th class=" center-align"><%= "CGST" %></th>
+          <th class=" center-align"><%= "SGST" %></th>
+          <th class=" center-align"><%= "Amount" %></th>
+          <th class=" center-align"><%= "Total Discount" %></th>
+          <th class=" center-align"><%= "Net Amount" %></th>
         </tr>
         </thead>
         <tbody id="invoice_line_items_tbl" class="invoice-line-items-table">
@@ -166,49 +144,36 @@
       <div class="right-section right">
         <div class="invoice-total-left">
           <strong class="invoice-total-title"><%= t('views.invoices.subtotal') %></strong>
-          <%= f.input :discount_type, collection: @discount_types, selected: f.object.discount_type, label: t('Discount(%)'),
-                      input_html: { class: 'discount_select inline-select small-select invoice-client-select', id: 'discount_type' },
-                      wrapper_html: { class: 'new-invoice-footer-row' } %>
-          <%= f.input :tax_id, collection: Tax.all.collect{|t| [t.name, t.id, {'data-tax_percentage'=>t.percentage.to_f}] }, selected: f.object.tax_id,
-                      label: t('views.common.tax'), include_blank: t('views.common.select'), wrapper_html: { class: 'new-invoice-footer-row invicetax' },
-                      input_html: { class: 'discount_select inline-select small-select form_select_2 invoice_tax_select'} %>
-          <div class="new-invoice-footer-row taxes_total"></div>
-          <strong class="invoice-total-title bottom"><%= t('views.common.invoice_tax') %></strong>
+          <strong class="invoice-total-title"><%= 'Invoice Discount' %></strong>
+          <strong class="new-invoice-footer-row taxes_total"></strong>
+          
+          
           <% if invoice.persisted? %>
             <strong class="invoice-total-title bottom"><%= t('views.common.total_amount_paid') %></strong>
           <% end %>
           <strong class="invoice-total-title bottom"><%= t('views.common.total') %></strong>
         </div>
         <div class="invoice-total-right">
-          <%= f.input :sub_total, as: :hidden, label: false, wrapper: false %>
-          <strong class="invoice-total-title"><div style="display: inline;" id="subtotal_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div> <span><%= label_tag '', '', :id => 'invoice_sub_total_lbl' %></span></strong>
-          <div class="new-invoice-footer-row">
-            <span id="discount_amount_currency_unit"><%= invoice.currency.unit rescue 'USD' %></span>
-            <%= f.input :discount_amount, as: :hidden, label: false, wrapper: false %>
-            <%= f.input :discount_percentage, label: '', label_html: { id: 'invoice_discount_amount_lbl', style: 'font-weight:normal; display:none;' },
-                        input_html: { class: 'input-inoive-number invoice_discount line_item_qtip right-align', placeholder:  "00.00", min: 0 }, wrapper: false %>
+          <%= f.input :sub_total, as: :hidden, label: false, wrapper: false, value: "#f_sub_total" %>
+          <strong class="invoice-total-title"> <div style="display: inline;" id="subtotal_currency_unit"><%= invoice.currency.unit rescue 'INR' %></div> <span><%= label_tag '', '', :id => 'invoice_sub_total_lbl' %></span></strong>
+
+          <%= f.input :discount_amount, as: :hidden, label: false, wrapper: false, value: "#f_invoice_discount" %>
+          <strong class="invoice-total-title"> <div style="display: inline;" id="subtotal_currency_unit"><%= invoice.currency.unit rescue 'INR' %></div> <span><%= label_tag '', '', :id => 'invoice_discount_amount_lbl' %></span></strong>
+          
+          
+          <div strong class="new-invoice-footer-row taxes_total values">
+            <%= f.input :tax_amount, label: false, wrapper: false, input_html: { class: 'input-inoive-number invoice_tax line_item_qtip right-align', readOnly: true }, value: "#f_tax_amount"  %>
           </div>
-          <div class="new-invoice-footer-row invicetax">
-            <span id="tax_currency_unit"><%= invoice.currency.unit rescue 'USD' %></span>
-            <%= f.input :invoice_tax_amount, label: false, wrapper: false,
-                        input_html: { class: 'input-inoive-number invoice_tax line_item_qtip right-align',
-                                      placeholder:  "00.00", readOnly: true }  %>
-          </div>
-          <%= f.input :tax_amount, as: :hidden, label: false, wrapper: false %>
-          <%= f.input :invoice_total, as: :hidden, label: false, wrapper: false %>
-          <div class="new-invoice-footer-row taxes_total values"></div>
-          <strong class="invoice-total-title bottom">
-            <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div>
-            <span><%= label_tag '', '0', :id => 'invoice_paid_lbl', :class => 'net_total_value' %></span>
-          </strong>
+          
           <% if invoice.persisted? %>
-            <strong class="invoice-total-title bottom">
-              <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div>
+            <strong class="invoice-total-title bottom"> 
+              <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'INR' %></div>
               <span><%= label_tag '', number_to_currency(Payment.invoice_paid_amount(invoice.id), unit: invoice.currency.code), :id => 'invoice_paid_lbl', :class => 'net_total_value' %></span>
             </strong>
           <% end %>
-          <strong class="invoice-total-title bottom">
-            <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'USD' %></div>
+
+          <%= f.input :invoice_total, as: :hidden, label: false, wrapper: false, value: "#f_invoice_total" %> 
+          <strong class="invoice-total-title bottom"> <div style="display: inline;" id="total_currency_unit"><%= invoice.currency.unit rescue 'INR' %></div>
             <span><%= label_tag '', '0', :id => 'invoice_total_lbl', :class => 'net_total_value' %></span>
           </strong>
         </div>
@@ -216,8 +181,8 @@
       </div>
     </div>
     <div class="invoice-add-notes">
-      <a href="#"><i class="material-icons">chat</i> </a>
-      <%= f.input :notes, label: false, as: :text, input_html: { placeholder: t('views.common.add_notes'), maxlength: 400, value: "#{default_company_note(current_company, f.object)}"},
+      <a href="#"><i class="material-icons">chat</i></a>
+      <%= f.input :notes, label: false, as: :text, input_html: { placeholder: t('views.common.add_notes'), maxlength: 400, value: ""},
                   wrapper_html: { class: 'invoice-add-notes-textare'} %>
     </div>
     <% if f.object.persisted? %>

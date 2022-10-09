@@ -52,7 +52,7 @@ module InvoicesHelper
   end
 
   def selected_payment_term invoice
-    if invoice.new_record?
+    if invoice.present? && invoice.new_record?
       PaymentTerm.find_by(description: 'custom').id
     else
       invoice.payment_terms_id
@@ -398,7 +398,16 @@ module InvoicesHelper
   def default_due_date(company, invoice)
     params[:action].eql?('new') && Company.find(company).due_date_period.present? ? Date.today + Company.find(company).due_date_period : invoice.due_date
   end
+
   def custom_recurring_value(form)
     RecurringFrequency.pluck(:number_of_days).include?(form.object.frequency.to_i) ? -2 : form.object.frequency.to_i
+  end
+
+  def load_line_item_special_discounts
+    [["None", 0, {"data-line_item_special_discount" => 0}], ["Free", 1, {"data-line_item_special_discount" => 100}],["Sample", 2, {"data-line_item_special_discount" => 100}]]
+  end
+
+  def terms_and_conditions
+    TermsAndConditions.all.join("\n").html_safe
   end
 end

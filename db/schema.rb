@@ -343,14 +343,15 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.datetime "updated_at", null: false
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.integer "estimate_id"
+    t.integer "tax_2"
+    t.integer "tax_1"
     t.string "pack"
     t.string "batch"
     t.string "expiry"
     t.string "hsn"
     t.decimal "rate"
     t.decimal "mrp"
-    t.integer "tax_2"
-    t.integer "tax_1"
+    t.integer "free_item_quantity"
   end
 
   create_table "invoice_tasks", force: :cascade do |t|
@@ -421,13 +422,13 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "tax_1"
   end
 
-  create_table "line_item_discouts", force: :cascade do |t|
+  create_table "line_item_discounts", force: :cascade do |t|
     t.bigint "invoice_line_item_id"
     t.integer "discount_type"
     t.decimal "amount"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["invoice_line_item_id"], name: "index_line_item_discouts_on_invoice_line_item_id"
+    t.index ["invoice_line_item_id"], name: "index_line_item_discounts_on_invoice_line_item_id"
   end
 
   create_table "line_item_taxes", force: :cascade do |t|
@@ -805,7 +806,7 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
   add_foreign_key "clients", "roles"
   add_foreign_key "introductions", "clients"
   add_foreign_key "introductions", "users"
-  add_foreign_key "line_item_discouts", "invoice_line_items"
+  add_foreign_key "line_item_discounts", "invoice_line_items"
   add_foreign_key "mail_configs", "companies"
   add_foreign_key "permissions", "roles"
   add_foreign_key "users", "roles"

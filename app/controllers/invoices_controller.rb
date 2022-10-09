@@ -65,9 +65,10 @@ class InvoicesController < ApplicationController
                 layout: 'pdf_mode.html.erb',
                 encoding: "UTF-8",
                 show_as_html: false,
+                orientation: 'Landscape',
                 template: 'invoices/show.html.erb',
-                margin:  {   top:               10,                     # default 10 (mm)
-                             bottom:            10,
+                margin:  {   top:               0,                     # default 10 (mm)
+                             bottom:            0,
                              left:              0,
                              right:             0 }
       end
@@ -81,7 +82,8 @@ class InvoicesController < ApplicationController
     @client = @invoice.client if params[:id].present?
     @invoice.currency = Currency.find_by(unit: Settings.default_currency)
     get_clients_and_items
-    @discount_types = @invoice.currency.present? ? ['%', @invoice.currency.unit] : DISCOUNT_TYPE
+    @discount_types = ['%']
+
     respond_to do |format|
       format.html # new.html.erb
       format.js
@@ -113,6 +115,7 @@ class InvoicesController < ApplicationController
                       end
     @invoice.invoice_type = "Invoice"
     @invoice.company_id = get_company_id()
+    @invoice.update_line_item_discounts(line_items_params)
     @invoice.create_line_item_taxes()
     # @recurring_schedule = RecurringSchedule.find()
     # RecurringSchedule.occurrences = params["invoice"]["recurring_schedule_attributes"]["occurrences"]
@@ -120,7 +123,7 @@ class InvoicesController < ApplicationController
     authorize @invoice
     respond_to do |format|
       if @invoice.save
-        @invoice.send_invoice(current_user, params[:id]) unless params[:save_as_draft].present?
+        # @invoice.send_invoice(current_user, params[:id]) unless params[:save_as_draft].present?
         @new_invoice_message = new_invoice(@invoice.id, params[:save_as_draft]).gsub(/<\/?[^>]*>/, "").chop
         format.js
         format.json {render :json=> @invoice, :status=> :ok}
@@ -162,6 +165,7 @@ class InvoicesController < ApplicationController
           format.js
         end
       elsif @invoice.update_attributes(invoice_params)
+        @invoice.update_line_item_discounts(line_items_params)
         @invoice.update_line_item_taxes()
         @invoice.notify(current_user, @invoice.id) unless params[:save_as_draft].present?
         @updated_invoice_line_items = true
@@ -399,7 +403,7 @@ class InvoicesController < ApplicationController
   private
 
   def get_invoice
-    @invoice = Invoice.find(params[:id])
+    @invoice = Invoice.includes(:invoice_line_items => :item).find(params[:id])
   end
 
   def verify_authenticity_token
@@ -438,14 +442,16 @@ class InvoicesController < ApplicationController
   def invoice_params
     params.require(:invoice).permit(:client_id, :discount_amount, :discount_type, :conversion_rate, :base_currency_id, :base_currency_equivalent_total,
                                     :discount_percentage, :invoice_date, :invoice_number,
-                                    :notes, :po_number, :status, :sub_total, :tax_amount, :terms,
+                                    :notes, :po_number, :status, :sub_total, :net_total, :tax_amount, :terms,
                                     :invoice_total, :invoice_line_items_attributes, :archive_number,
                                     :archived_at, :deleted_at, :payment_terms_id, :due_date,
                                     :last_invoice_status, :company_id,:currency_id, :tax_id,:invoice_tax_amount, :billing_month,
                                     invoice_line_items_attributes:
                                         [
                                           :id, :invoice_id, :item_description, :item_id, :item_name,
-                                          :item_quantity, :item_unit_cost, :tax_1, :tax_2, :_destroy
+                                          :item_quantity, :item_unit_cost, :tax_1, :tax_2, :_destroy, 
+                                          :pack, :batch, :expiry, :hsn, :mrp, :rate,
+                                          :discount
                                         ],
                                     recurring_schedule_attributes:
                                         [
@@ -471,4 +477,7 @@ class InvoicesController < ApplicationController
     )
   end
 
+  def line_items_params
+    params[:invoice].require(:invoice_line_items_attributes).as_json
+  end
 end

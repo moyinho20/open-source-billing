@@ -9,35 +9,27 @@ class window.TaxCalculator
   # itrate to line items
   @applyAllLineItemTaxes = ->
     taxes = []
-    jQuery("table.invoice_grid_fields tr:visible, table.estimate_grid_fields tr:visible").each ->
-      # TODO: apply discount on lineTotal
-      discountPct = parseFloat($("#invoice_discount_percentage, #recurring_profile_discount_percentage, #estimate_discount_percentage").val())
-      discountType = $("select#discount_type").val()
+    $('#invoice_grid_fields > tbody  > tr').each ->
+      container = $(this)
+      lineTotal = jQuery(container).find(".line_total").text()
+      discountedLineTotal = jQuery(container).find(".line_total_discount").text()
+      taxableTotal = lineTotal - discountedLineTotal
+      tax1Select = jQuery(container).find(".tax1 option:selected")
+      tax2Select = jQuery(container).find(".tax2 option:selected")
 
-      lineTotal = ((parseFloat $(this).find(".cost").val())*(parseFloat $(this).find(".qty").val()))
-      lineTotal = 0 if isNaN(lineTotal)
-      discountAmount = if discountType == "%" then (lineTotal * discountPct / 100.0 ) else discountPct
-      discountAmount = 0 if isNaN(discountAmount)
-      discountedLineTotal = lineTotal - discountAmount
-
-      tax1Select = $(this).find("select.tax1 option:selected")
-      tax2Select = $(this).find("select.tax2 option:selected")
-
-      tax1Input = $(this).find("#tax_amount")
       discountedLineTotal = 0 if lineTotal == 0
-
       # calculate tax1
       tax1Name = tax1Select.text()
       tax1Pct = parseFloat tax1Select.attr "data-tax_1"
-      tax1Amount = discountedLineTotal * tax1Pct / 100.0
+      tax1Amount = taxableTotal * tax1Pct / 100.0
 
       # calculate tax2
       tax2Name = tax2Select.text()
       tax2Pct = parseFloat tax2Select.attr "data-tax_2"
-      tax2Amount = discountedLineTotal * tax2Pct / 100.0
+      tax2Amount = taxableTotal * tax2Pct / 100.0
 
-      taxes.push {name: tax1Name, pct: tax1Pct, amount: tax1Amount} if $(this).find("select.tax1 option:selected").text() != "" #if tax1Name && tax1Pct && tax1Amount
-      taxes.push {name: tax2Name, pct: tax2Pct, amount: tax2Amount} if $(this).find("select.tax1 option:selected").text() != "" #if tax2Name && tax2Pct && tax2Amount
+      taxes.push {name: tax1Name, pct: tax1Pct, amount: tax1Amount} if tax1Select.text() != "" #if tax1Name && tax1Pct && tax1Amount
+      taxes.push {name: tax2Name, pct: tax2Pct, amount: tax2Amount} if tax2Select.text() != "" #if tax2Name && tax2Pct && tax2Amount
 
     tlist = {}
 

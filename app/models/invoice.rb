@@ -86,7 +86,7 @@ class Invoice < ApplicationRecord
   before_create :set_invoice_number
   after_destroy :destroy_credit_payments
   before_save :set_default_currency
-  before_save :update_invoice_total
+  # before_save :update_invoice_total
 
   # archive and delete
   acts_as_archival
@@ -194,14 +194,10 @@ class Invoice < ApplicationRecord
   end
 
   def self.get_next_invoice_number user_id
+    prefix = Time.now.strftime("%^b%y")
     current_company = Company.find invoice_current_user.current_company
-    current_company_name = current_company.company_name.downcase
-    if current_company_name.eql?("nextbridge fze")
-      invoice_number = current_company.invoices.last.invoice_number.split('-') if current_company.invoices.present?
-      current_company.invoices.empty? ? "FZE-"+((0) + 1).to_s.rjust(5, "0") : "FZE-"+((invoice_number[1].to_i || 0 ) + 1).to_s.rjust(5, "0")
-    else
-      current_company.invoices.empty? ? ((0) + 1).to_s.rjust(5, "0") : ((current_company.invoices.last.invoice_number.to_i || 0 ) + 1).to_s.rjust(5, "0")
-    end
+    number = current_company.invoices.empty? ? "0001" : ((current_company.invoices.last.invoice_number.last(4).to_i || 0 ) + 1).to_s.rjust(4, "0")
+    "#{prefix}#{number}"
   end
 
   def total
@@ -297,7 +293,7 @@ class Invoice < ApplicationRecord
 
   def notify(current_user, id = nil, invoice_pdf_file = nil)
     current_company = Company.find(current_user.current_company)
-    NotificationWorker.perform_async('InvoiceMailer','new_invoice_email',[self.client_id, self.id, self.id, current_user.id, invoice_pdf_file], current_company.smtp_settings)
+    # NotificationWorker.perform_async('InvoiceMailer','new_invoice_email',[self.client_id, self.id, self.id, current_user.id, invoice_pdf_file], current_company.smtp_settings)
   end
 
   def send_invoice current_user, id
@@ -403,8 +399,8 @@ class Invoice < ApplicationRecord
     taxes = []
     tlist = Hash.new(0)
     self.invoice_line_items.each do |li|
-      next unless [li.item_unit_cost, li.item_quantity].all?
-      line_total = li.item_unit_cost * li.item_quantity
+      next unless [li.actual_price.to_i, li.item_quantity].all?
+      line_total = li.net_amount
       # calculate tax1 and tax2
       if li.tax_1.present? and li.tax1.nil?
         taxes.push({name: load_deleted_tax1(li).name, pct: "#{load_deleted_tax1(li).percentage.to_s}%", amount: ((line_total) * load_deleted_tax1(li).percentage / 100.0) }) unless load_deleted_tax1(li).blank?
@@ -423,7 +419,7 @@ class Invoice < ApplicationRecord
       end
     end
     taxes.each do |tax|
-      tlist["#{tax[:name]} #{tax[:pct]}"] += tax[:amount]
+      tlist["#{tax[:name]}"] += tax[:amount]
     end
     tlist
   end
@@ -577,27 +573,28 @@ class Invoice < ApplicationRecord
     end
   end
 
-  def applyDiscount(line_items_total_with_taxes)
-    discount_type = self.discount_type
-    discount_value = self.discount_percentage.to_f
-    discounted_amount = if discount_value.eql?(0.0)
-                          0.0
-                        else
-                          discount_type.eql?('%') ? (line_items_total_with_taxes * (discount_value.to_f / 100.0)).round(2) : discount_value
-                        end
-    discounted_amount
-  end
-
-  def update_invoice_total
-    unless self.status.eql?('void')
-      line_items_total_with_taxes = self.invoice_line_items.to_a.sum(&:item_total_amount).to_f
-      discounted_amount = applyDiscount(line_items_total_with_taxes)
-      subtotal = line_items_total_with_taxes - discounted_amount
-      invoice_tax_amount = self.tax_id.nil? ? 0.0 : (Tax.with_deleted.find_by(id: self.tax_id).percentage.to_f)
-      additional_invoice_tax = invoice_tax_amount.eql?(0.0) ? 0.0 : (subtotal * invoice_tax_amount/100.0).round(2)
-      self.sub_total = line_items_total_with_taxes
-      self.invoice_total = (subtotal + additional_invoice_tax).round(2)
-    end
+  def update_line_item_discounts(line_items)
+    line_items_hash = line_items.values.each do |item|
+      destroy_item = item.delete("_destroy")
+      line_item_discount = item.delete("line_item_discount").to_f
+      special_discount_type = item.delete("special_discount")
+      if special_discount_type == "1"
+        item['actual_price'] = 0 
+      else
+        item['actual_price'] = item["rate"].to_f * (1 - line_item_discount/100.0)
+      end
+      line_item_record = InvoiceLineItem.find_or_initialize_by(item)
+      line_item_record.save
+      if line_item_discount > 0 || special_discount_type != "0"
+        discount_record = line_item_record.line_item_discounts.find_or_initialize_by(discount_type: special_discount_type.to_i)
+        if special_discount_type == "0" 
+          discount_record.amount = line_item_discount
+        else
+          discount_record.amount = 100
+        end
+        discount_record.save!
+      end
+    end 
   end
 
   def formatted_invoice_number

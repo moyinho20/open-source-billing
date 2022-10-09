@@ -14,7 +14,7 @@ class window.Invoice
 
 
   @changeTax = ->
-    jQuery("select.tax1, select.tax2").on "change", ->
+    jQuery("select.tax1, select.tax2, #line_item_special_discount, #line_item_discount").on "change", ->
       if $(this).val() == ''
         $(this).parent('div').attr('title', I18n.t('views.common.please_select')).qtip()
       else
@@ -28,7 +28,6 @@ class window.Invoice
 
 
   @change_invoice_item  = (elem) ->
-
     $('.invoice_grid_fields select.items_list').on 'change', ->
         if parseInt($(this).find(':selected').val()) != -1
           OsbPlugins.hidePopover($("table#invoice_grid_fields tr.fields:visible:first td:nth-child(2)"))
@@ -47,12 +46,9 @@ class window.Invoice
               success: (data, textStatus, jqXHR) ->
                 item = JSON.parse(data)
                 container = elem.parents('tr.fields')
-                container.find('textarea.description').val item[0]
-                container.find('td.description').html item[0]
+                container.find('input.pack').val item[2]
                 container.find('input.cost').val item[1].toFixed(2)
                 container.find('td.cost').html item[1].toFixed(2)
-                container.find('input.qty').val item[2]
-                container.find('td.qty').html item[2]
                 container.find('td.description_row').attr('title', item[0])
 #                OsbPlugins.empty_tax_fields(container)
                 if item[3] != 0
@@ -209,6 +205,7 @@ $(document).ready ->
     minimumResultsForSearch: -1,
     dropdownCssClass: "tax-dropdown"
   });
+  
 #  $('#invoice_recurring_schedule_attributes_frequency').append $('<option value=\'-2\'>Custom</option>')
   $('#invoice_recurring_schedule_attributes_frequency_repetition').select2()
   $('#invoice_recurring_schedule_attributes_frequency_type').select2()

@@ -26,51 +26,12 @@
               <span class="text-blue"> Due: <small id="invoice_due_date_text"> <%= f.object.due_date.present? ? f.object.due_date : 'TBD'   %> </small> <i class="material-icons" id="invoice_due_date_picker">date_range</i></span>
               <%= f.hidden_field :invoice_date,value: f.object.invoice_date, :required => "" %>
               <%= f.hidden_field :due_date, :placeholder => "TBD" %>
-
-              <div class="editPayementInfo">
-                <strong><strong class="invoice_total_strong"></strong>
-                  <small>
-                    <% selected_currency = (@client.present? ? @client.currency_id : f.object.currency_id) %>
-                    <%= f.select :currency_id, options_for_select(Currency.unscoped.collect{|c| ["#{c.unit} #{c.title}",c.id] }, selected: selected_currency),  {include_blank: false}, {class: 'inline-select large-select'} %>
-                  </small>
-                </strong>
-              </div>
             </div>
-            <% unless f.object.company.blank? or f.object.company.logo_url.blank? %>
-                <div class="info-right-section right circle">
-                  <%= image_tag(invoice.company.logo_url(:thumb), class: 'responsive-img') %>
-                </div>
-            <% end %>
+              <div class="info-right-section right circle">
+                <%= image_tag('shri-logo.png'), class: 'responsive-img') %>
+              </div>
           </div>
 
-
-        <div class="modal-body">
-          <table class="bordered responsive-table invoice_grid_fields" id="invoice_grid_fields">
-            <thead>
-            <tr>
-
-              <th class="left-align"><%= t('views.tasks.name') %></th>
-              <th class="left-align"><%= t('views.tasks.description') %></th>
-              <th class="center-align"><%= t('views.tasks.rate') %></th>
-              <th class="center-align"><%= 'Logged hours' %></th>
-              <th class="center-align"><%= t('views.invoices.line_total') %></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @project.logs.each do |log| %>
-                <tr>
-
-                  <td class="left-align"><%= log.task.name %></td>
-                  <td class="left-align"><%= log.task.description %></td>
-                  <td class="center-align"><%= log.task.rate %></td>
-                  <td class="center-align"><%= log.hours %></td>
-                  <td class="center-align line_total"><%= log.line_total %></td>
-                </tr>
-
-            <% end %>
-            </tbody>
-          </table>
-        </div>
         <div class="modal-footer clearfix">
           <div class="right-section left">
           </div>
