@@ -14,7 +14,7 @@ class window.Invoice
 
 
   @changeTax = ->
-    jQuery("select.tax1, select.tax2, #line_item_special_discount, #line_item_discount").on "change", ->
+    jQuery("select.tax1, select.tax2, select.discount, .line_item_discount").on "change", ->
       if $(this).val() == ''
         $(this).parent('div').attr('title', I18n.t('views.common.please_select')).qtip()
       else

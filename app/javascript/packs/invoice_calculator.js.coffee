@@ -6,7 +6,7 @@ class window.InvoiceCalculator
     qty = jQuery(container).find("input.qty").val()
     cost = 0 if not cost? or cost is "" or not jQuery.isNumeric(cost)
     qty = 0 if not qty? or qty is "" or not jQuery.isNumeric(qty)
-    discount =  $('#line_item_discount').val()
+    discount =  jQuery(container).find(".line_item_discount").val()
     special_discount = elem.parents("tr").find("select.special_discount option:selected").attr('data-line_item_special_discount')
     special_discount = 0 if not special_discount? or special_discount is "" or not jQuery.isNumeric(special_discount)
     discount = 0 if not discount? or discount is "" or not jQuery.isNumeric(discount)
