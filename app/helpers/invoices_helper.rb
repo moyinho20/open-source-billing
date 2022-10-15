@@ -410,4 +410,14 @@ module InvoicesHelper
   def terms_and_conditions
     TermsAndConditions.all.join("\n").html_safe
   end
+
+  def selected_tax1(item_id)
+    tax1 = Item.find_by_id(item_id).try(:tax1)
+    tax1.present? ? [tax1.name, tax1.id, {'data-type' => 'active_tax', 'data-tax_1' => tax1.percentage}] : []
+  end
+
+  def selected_tax2(item_id)
+    tax2 = Item.find_by_id(item_id).try(:tax2)
+    tax2.present? ? [tax2.name, tax2.id, {'data-type' => 'active_tax', 'data-tax_2' => tax2.percentage}] : []
+  end
 end

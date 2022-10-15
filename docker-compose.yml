@@ -1,7 +1,7 @@
-version: '3'
+version: '2'
 services:
   db:
-    image: postgres
+    image: postgres:9.5
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     ports: 
@@ -11,11 +11,6 @@ services:
       POSTGRES_PASSWORD: "password"
     env_file:
       - '.env'
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
   redis:
     image: redis
     volumes:
@@ -39,12 +34,12 @@ services:
     env_file:
       - '.env'
     command: bundle exec sidekiq
-  web:
+
+  app:
     build:
-      context: .
       dockerfile: ./docker/app/Dockerfile
     ports:
-      - 3000:3000
+      - 8080:8080
     depends_on:
       - db
       - redis
@@ -52,4 +47,4 @@ services:
     environment:
       - RAILS_ENV=${RAILS_ENV}
     env_file:
-      - '.env'
+      - '.env' 

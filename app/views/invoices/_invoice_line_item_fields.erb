@@ -39,10 +39,10 @@
     <%= f.input :line_item_discount, label: false, wrapper: false, input_html: { class: 'center-align', value: f.object.discount, class: 'line_item_discount discount' } %>
   </td>
   <td class="center-align tax-class intro invoices-new-false-intro" data-intro="From here you can apply any tax on a line item" data-step="12">
-    <%= f.select(:tax_1, options_for_select(load_line_item_taxes1(f.object), selected: f.object.tax_1), {prompt: t('views.taxes.select_tax_1'), include_blank: ''}, {'data-placeholder' => '', class: 'tax tax1 inline-select table-select invoice-client-select tax_select'}) %>
+    <%= f.select(:tax_1, options_for_select(load_line_item_taxes1(f.object), selected: selected_tax1(f.object.item_id)), {prompt: t('views.taxes.select_tax_1'), include_blank: ''}, {'data-placeholder' => '', class: 'tax tax1 inline-select table-select invoice-client-select tax_select'}) %>
   </td>
   <td class="center-align tax-class">
-    <%= f.select(:tax_2, options_for_select(load_line_item_taxes2(f.object), selected: f.object.tax_2), {prompt: t('views.taxes.select_tax_2'), include_blank: ''}, {'data-placeholder' => '', class: 'tax tax2 inline-select table-select invoice-client-select tax_select'}) %>
+    <%= f.select(:tax_2, options_for_select(load_line_item_taxes2(f.object), selected: selected_tax2(f.object.item_id)), {prompt: t('views.taxes.select_tax_2'), include_blank: ''}, {'data-placeholder' => '', class: 'tax tax2 inline-select table-select invoice-client-select tax_select'}) %>
   </td>
 
   <%# if f.object.id.present? %>

@@ -601,7 +601,7 @@ DEPENDENCIES
   momentjs-rails (= 2.11.1)
   money (~> 6.5.0)
   nested_form (= 0.3.2)
-  nokogiri
+  nokogiri (~> 1.6, >= 1.6.7)
   oauth (= 0.4.7)
   oauth2 (= 1.4.3)
   osb_api!
