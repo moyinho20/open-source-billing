@@ -54,7 +54,7 @@ class Client < ApplicationRecord
   has_many :expenses
   has_one :introduction
 
-  validates :organization_name, :first_name, :last_name, :email, presence: true
+  validates :organization_name, presence: true
 
   before_create :create_default_currency
 
