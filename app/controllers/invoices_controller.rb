@@ -148,7 +148,6 @@ class InvoicesController < ApplicationController
                         end
     end
     @invoice.update_dispute_invoice(current_user, @invoice.id, params[:response_to_client], @notify) unless params[:response_to_client].blank?
-    # binding.pry
     respond_to do |format|
       if @invoice.client.nil?
         @invoice.client = Client.with_deleted.find_by(id: @invoice.client_id)
@@ -376,7 +375,6 @@ class InvoicesController < ApplicationController
     respond_to do |format|
       format.js
     end
-    # binding.pry
   end
 
   def stop_recurring

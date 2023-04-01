@@ -36,7 +36,6 @@ class ClientsController < ApplicationController
     @clients = Client.get_clients(params.merge(get_args))
     @clients = Kaminari.paginate_array(@clients).page(params[:page]).per(@per_page)
     @client_activity = Reporting::ClientActivity.get_recent_activity(get_company_id, params.deep_dup, current_user)
-    # binding.pry
     authorize Client
 
     respond_to do |format|
