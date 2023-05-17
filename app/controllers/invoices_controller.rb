@@ -65,7 +65,7 @@ class InvoicesController < ApplicationController
                 layout: 'pdf_mode.html.erb',
                 encoding: "UTF-8",
                 show_as_html: false,
-                orientation: 'Landscape',
+                orientation: 'Portrait',
                 template: 'invoices/show.html.erb',
                 margin:  {   top:               0,                     # default 10 (mm)
                              bottom:            0,
