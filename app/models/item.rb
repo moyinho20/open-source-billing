@@ -46,7 +46,7 @@ class Item < ApplicationRecord
   belongs_to :company
   has_many :company_entities, :as => :entity
 
-  validates :item_name, :item_description, :unit_cost, :quantity, presence: true
+  validates :unit_cost, :quantity, presence: true
 
   # archive and delete
   acts_as_archival

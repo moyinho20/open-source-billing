@@ -33,7 +33,7 @@
         <td class="align_left"><%= "#{item.hsn}" %></td>
         <td class="align_left"><%= number_to_currency(item.mrp, unit: invoice.currency.code) %></td>
         <td class="center-align"><%= number_to_currency(item.rate, unit: invoice.currency.code) %></td>
-        <td class="align_left"><%= item.discount.to_i%>%</td>
+        <td class="align_left"><%= item.discount.round(2)%>%</td>
         <% if invoice.has_tax_one? %>
           <td class="center-align"><%= "#{Tax.with_deleted.find(item.tax_1).percentage}%" if item.tax_1.present? %></td>
         <% end %>
