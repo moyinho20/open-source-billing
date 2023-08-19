@@ -1,0 +1,71 @@
+
+default: &default
+  adapter: postgresql
+  pool: 100
+  reaping_frequency: 10
+  timeout: 5000
+  encoding: unicode
+  host: localhost
+  database: psql_development
+  username: postgres
+  password: password
+  # adapter: postgresql
+  # encoding: unicode
+  # database: <%= ENV['DATABASE_NAME'] %>
+  # username: <%= ENV['DATABASE_USER'] %>
+  # password: <%= ENV['DATABASE_PASSWORD'] %>
+  # port: 5432
+  # host: db
+  # pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # timeout: 5000
+development:
+  <<: *default
+# # Warning: The database defined as "test" will be erased and
+# # re-generated from your development database when you run "rake".
+# # Do not set this db to the same as development or production.
+# test:
+#   <<: *default
+#   database: psql_test
+
+# production:
+#   <<: *default
+#   adapter: postgresql
+#   pool: 100
+#   reaping_frequency: 10
+#   timeout: 5000
+#   encoding: unicode
+#   host: localhost
+#   database: psql_production
+#   username: postgres
+#   password: password
+
+# default: &default
+#   adapter: postgresql
+#   encoding: unicode
+#   database: <%= ENV['DATABASE_NAME'] %>
+#   username: <%= ENV['DATABASE_USER'] %>
+#   password: <%= ENV['DATABASE_PASSWORD'] %>
+#   port: <%= ENV['DATABASE_PORT'] || '5432' %>
+#   host: <%= ENV['DATABASE_HOST'] %>
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   timeout: 5000
+
+# development: 
+#   <<: *default
+#   database: billing_development
+
+test: 
+  <<: *default
+#   database: billing_test
+
+production: 
+  <<: *default
+#   database: billing_production
+
+# production:
+#   <<: *default
+  # database: hello_world_production
+  # username: hello_world
+  # password: <%= ENV['PRODUCTION_DATABASE_PASSWORD'] %>
+  # host: <%= ENV['PRODUCTION_DATABASE_HOST'] %>
+  # port: <%= ENV['PRODUCTION_DATABASE_PORT'] %>
