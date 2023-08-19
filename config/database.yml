@@ -5,15 +5,16 @@ default: &default
   reaping_frequency: 10
   timeout: 5000
   encoding: unicode
-  host: localhost
-  database: psql_development
-  username: postgres
-  password: password
+  # host: localhost
+  # database: psql_development
+  # username: postgres
+  # password: password
   # adapter: postgresql
   # encoding: unicode
-  # database: <%= ENV['DATABASE_NAME'] %>
-  # username: <%= ENV['DATABASE_USER'] %>
-  # password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+  database: <%= ENV['DATABASE_NAME'] %>
+  username: <%= ENV['DATABASE_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
   # port: 5432
   # host: db
   # pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
