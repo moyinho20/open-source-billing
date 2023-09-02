@@ -17,26 +17,26 @@
     <%= f.input :item_quantity, label: false, wrapper: false, input_html: { class: 'qty qtyy', value: f.object.item_quantity.to_f } %>
   </td>
   <td>
-    <%= f.input :batch, label: false, wrapper: false, as: :string, input_html: { value: f.object.batch } %>
+    <%= f.input :batch, label: false, wrapper: false, input_html: { class: 'batch', value: f.object.batch } %>
   </td>
   <td>
-    <%= f.input :expiry, label: false, wrapper: false, as: :string, input_html: { value: f.object.expiry } %>
+    <%= f.input :expiry, label: false, wrapper: false, input_html: { class: 'expiry', value: f.object.expiry } %>
   </td>
   <td>
-    <%= f.input :hsn, label: false, wrapper: false, as: :string, input_html: { value: f.object.hsn } %>
+    <%= f.input :hsn, label: false, wrapper: false, input_html: { class: 'hsn', value: f.object.hsn } %>
   </td>
   <td>
-    <%= f.input :mrp, label: false, wrapper: false, as: :string, input_html: {value: f.object.mrp } %>
+    <%= f.input :mrp, label: false, wrapper: false, input_html: {class: 'mrp', value: f.object.mrp } %>
   </td>
   <td>
-    <%= f.input :rate, label: false, wrapper: false, as: :string, input_html: {class: 'cost cossst', value: f.object.rate} %>
+    <%= f.input :rate, label: false, wrapper: false, input_html: {class: 'rate cost cossst', value: f.object.rate} %>
   </td>
   <td class="center-align tax-class intro invoices-new-false-intro" data-intro="From here you can apply any tax on a line item" data-step="12">
     <%= f.select(:special_discount, options_for_select(load_line_item_special_discounts, selected: f.object.special_discount), {prompt: t('views.taxes.select_tax_1'), include_blank: ''}, {'data-placeholder' => '', class: 'special_discount inline-select table-select invoice-client-select tax_select line_item_special_discount', id: 'line_item_special_discount'}) %>
   </td>
   
   <td>
-    <%= f.input :line_item_discount, label: false, wrapper: false, input_html: { class: 'center-align', value: f.object.discount, class: 'line_item_discount discount' } %>
+    <%= f.input :line_item_discount, label: false, wrapper: false, input_html: { class: 'discount center-align', value: f.object.discount, class: 'line_item_discount discount' } %>
   </td>
   <td class="center-align tax-class intro invoices-new-false-intro" data-intro="From here you can apply any tax on a line item" data-step="12">
     <%= f.select(:tax_1, options_for_select(load_line_item_taxes1(f.object), selected: f.object.tax_1), {prompt: t('views.taxes.select_tax_1'), include_blank: ''}, {'data-placeholder' => '', class: 'tax tax1 inline-select table-select invoice-client-select tax_select'}) %>
