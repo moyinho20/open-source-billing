@@ -823,7 +823,7 @@ h6 {
     width: 200px;
     padding: 20px; }
   #activity-sidebar.side-show {
-    margin-right: -258px;
+    margin-right: 0px;
     -moz-transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -ms-transition: all 0.5s;
@@ -1153,8 +1153,7 @@ h6 {
   -moz-transition: all 0.5s;
   -webkit-transition: all 0.5s;
   -ms-transition: all 0.5s;
-  transition: all 0.5s;
-  margin-right: 330px; }
+  transition: all 0.5s;}
 #main-content.side-show {
   position: relative;
   padding-left: 281px !important;
@@ -1162,8 +1161,7 @@ h6 {
   -webkit-transition: all 0.5s;
   -ms-transition: all 0.5s;
   transition: all 0.5s;
-  margin-right: 0;
-  padding-right: 330px; }
+  margin-right: 0; }
 @media only screen and (max-width: 992px) {
   #main-content.side-show {
     padding-right: 0px; } }
@@ -2040,8 +2038,7 @@ h6 {
 .invoice-page .side-show#activity-sidebar {
   padding-right: 108px;
   right: 32px; }
-.invoice-page .side-show#main-content {
-  padding-right: 320px; }
+
 
 .modal {
   width: 65%;
