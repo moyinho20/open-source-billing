@@ -84,6 +84,7 @@ class Invoice < ApplicationRecord
 
   # callbacks
   before_create :set_invoice_number
+  after_create :set_item_details
   after_destroy :destroy_credit_payments
   before_save :set_default_currency
   # before_save :update_invoice_total
@@ -599,6 +600,16 @@ class Invoice < ApplicationRecord
         'company_abbreviation' => (self.company.abbreviation rescue 'Company Abbreviation')
     }
     Settings.invoice_number_format.gsub(/\{\{(.*?)\}\}/) {|m| param_values[$1] }
+  end
+
+  def set_item_details
+    self.invoice_line_items.each do |line_item|
+      item_update_hash = {}
+      %w(batch expiry hsn mrp).each{|key| item_update_hash[key] = line_item[key]}
+      item_update_hash["ptr"] = line_item["rate"]
+      item_update_hash["discount"] = line_item.line_item_discounts[0].try(:amount).to_f
+      line_item.item.update(item_update_hash)
+    end
   end
 
 end

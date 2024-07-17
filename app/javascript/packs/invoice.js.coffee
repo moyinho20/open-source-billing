@@ -50,6 +50,7 @@ class window.Invoice
                 container.find('input.cost').val item[1].toFixed(2)
                 container.find('td.cost').html item[1].toFixed(2)
                 container.find('td.description_row').attr('title', item[0])
+
 #                OsbPlugins.empty_tax_fields(container)
                 if item[3] != 0
                   container.find('select.tax1').val(item[3]).trigger('contentChanged');
@@ -64,7 +65,12 @@ class window.Invoice
                   container.find('td.tax2').html item[7]
                   $('select.tax2').material_select('destroy')
                 container.find('input.item_name').val item[5]
-
+                container.find('input.batch').val item[10]
+                container.find('input.expiry').val item[11]
+                container.find('input.hsn').val item[12]
+                container.find('input.mrp').val item[13].toFixed(2)
+                container.find('input.rate').val item[14].toFixed(2)
+                container.find('input.discount').val item[15].toFixed(2)
                 InvoiceCalculator.updateLineTotal(elem)
                 InvoiceCalculator.updateInvoiceTotal()
 

@@ -152,7 +152,7 @@ class ItemsController < ApplicationController
 #  # Load invoice line items data when an item is selected from drop down list
   def load_item_data
     item = Item.find_by_id(params[:id]).present? ?  Item.find(params[:id]) : Item.unscoped.find_by_id(params[:id])
-    render :plain => [item.item_description || "", item.unit_cost.to_f || 1, item.quantity.to_f || 1, item.tax_1 || 0, item.tax_2 || 0, item.item_name || "", item.tax1_name || "", item.tax2_name || "", item.tax1_percentage || 0, item.tax2_percentage || 0 ]
+    render :plain => [item.item_description || "", item.unit_cost.to_f || 1, item.quantity.to_f || 1, item.tax_1 || 0, item.tax_2 || 0, item.item_name || "", item.tax1_name || "", item.tax2_name || "", item.tax1_percentage || 0, item.tax2_percentage || 0, item.batch || "", item.expiry || "", item.hsn || "", item.mrp.to_f || 0.0, item.ptr.to_f || 0.0, item.discount.to_f || 0 ]
   end
 
   def bulk_actions
