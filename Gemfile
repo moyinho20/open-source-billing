@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.7.2'
+ruby '2.7.8'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 gem 'railties', '6.0.2.2'
 gem 'sprockets', '~> 4'
@@ -73,7 +73,7 @@ end
 
 gem 'money', '~>  6.5.0'
 gem 'osb_api', path: 'vendor/engines/osb_api'
-
+gem 'tzinfo-data'
 # To use Jbuilder templates for JSON
 gem 'jbuilder', '~> 2.0'
 gem 'oauth', '0.4.7'
