@@ -10,7 +10,7 @@ default: &default
   # adapter: postgresql
   # encoding: unicode
   username: postgres
-  password: @bindu123
+  password: "bindu123"
   host: db
   port: 5432
   # port: 5432

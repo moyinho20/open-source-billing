@@ -1,11 +1,10 @@
-version: '3.8'
 services:
   db:
     image: postgres:latest
     environment:
       POSTGRES_DB: myapp_development
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: @bindu123
+      POSTGRES_PASSWORD: "bindu123"
     networks:
       - mynetwork
     ports:
@@ -20,14 +19,14 @@ services:
     build:
       context: /Users/moyinho20/shri/open-source-billing
       dockerfile: Dockerfile
-    command: sh -c "bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
+    command: sh -c "bundle exec rails server -b 0.0.0.0"
     depends_on:
       db:
         condition: service_healthy
     networks:
       - mynetwork
     ports:
-     - "3000:3000"
+     - "3005:3000"
 
 networks:
   mynetwork:
