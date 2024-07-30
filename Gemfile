@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.7.2'
+ruby '2.7.8'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 gem 'railties', '6.0.2.2'
 gem 'sprockets', '~> 4'
@@ -53,10 +53,10 @@ gem 'activemerchant'
 gem 'paper_trail', '10.3.1'
 gem 'carrierwave', '0.11.2'
 gem 'tinymce-rails', '4.3.13'
-gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
 gem 'fullcalendar-rails', '2.0.2.0'
 gem 'momentjs-rails', '2.11.1'
+gem 'grover'
+
 # testing
 gem 'factory_girl_rails', '~> 4.5.0'
 gem 'factory_girl', '~> 4.5.0'
@@ -73,7 +73,7 @@ end
 
 gem 'money', '~>  6.5.0'
 gem 'osb_api', path: 'vendor/engines/osb_api'
-
+gem 'tzinfo-data'
 # To use Jbuilder templates for JSON
 gem 'jbuilder', '~> 2.0'
 gem 'oauth', '0.4.7'
@@ -93,7 +93,6 @@ gem 'elasticsearch-rails', '5.0.0'
 gem 'exception_notification-rake', '0.3.1'
 
 gem 'whenever', '0.9.7'
-gem 'browser-timezone-rails'
 gem 'js_cookie_rails', '1.0.1'
 gem 'i18n-js', '~> 3.0', '>= 3.0.5'
 gem 'simple_form', '5.0.0'
