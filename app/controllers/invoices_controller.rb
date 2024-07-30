@@ -61,16 +61,7 @@ class InvoicesController < ApplicationController
       format.html {render template: 'invoices/show.html.erb'}
       format.js
       format.pdf do
-        render  pdf: "#{@invoice.invoice_number}",
-                layout: 'pdf_mode.html.erb',
-                encoding: "UTF-8",
-                show_as_html: false,
-                orientation: 'Portrait',
-                template: 'invoices/show.html.erb',
-                margin:  {   top:               0,                     # default 10 (mm)
-                             bottom:            0,
-                             left:              0,
-                             right:             0 }
+        send_data InvoiceDocument.new(@invoice, left_margin: 10).render, filename: "#{@invoice.invoice_number}", type: "application/pdf", orientation: 'Portrait', disposition: 'inline'
       end
     end
   end
@@ -185,9 +176,6 @@ class InvoicesController < ApplicationController
       format.html { redirect_to invoices_path }
       format.json { render_json(@invoice) }
     end
-  end
-
-  def abc
   end
 
   def invoice_receipt
@@ -447,7 +435,7 @@ class InvoicesController < ApplicationController
                                     invoice_line_items_attributes:
                                         [
                                           :id, :invoice_id, :item_description, :item_id, :item_name,
-                                          :item_quantity, :item_unit_cost, :tax_1, :tax_2, :_destroy, 
+                                          :item_quantity, :item_unit_cost, :tax_1, :tax_2, :_destroy,
                                           :pack, :batch, :expiry, :hsn, :mrp, :rate,
                                           :discount
                                         ],
