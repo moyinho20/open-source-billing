@@ -30,7 +30,7 @@ class InvoiceDocument < Prawn::Document
     bounding_box([25, bounds.height - 120], width: (bounds.width - 150)) do
       text "GST INVOICE", size: 20, style: :bold, color: '09B8E2'
       text "Invoice Date: #{invoice.created_at.strftime('%d-%m-%Y')}", size: 10
-      text "Due Date: #{invoice.due_date}", size: 10
+      text "Due Date: #{Date.parse(invoice.due_date).strftime('%d-%m-%Y')}", size: 10
       text "INVOICE #: #{invoice.invoice_number}", size: 10
       text "Invoice Type: #{invoice.invoice_type}", size: 10
       text "Billing Month: #{invoice.billing_month}", size: 10
@@ -43,10 +43,13 @@ class InvoiceDocument < Prawn::Document
       text "#{client.full_name}"
       if client.present?
         text "#{client.address_street1}", size: 10
-        text "#{[client.address_street2, client.city, "#{client.state} #{client.zipcode}", client.country].reject(&:blank?).join(', ')}", size: 10
+        text "#{client.address_street2}", size: 10
+        text "#{[client.city, "#{client.state} #{client.zipcode}", client.country].reject(&:blank?).join(', ')}", size: 10
         text "Tel: #{[client.mobile_number, client.business_phone].reject(&:blank?).join(', ')}", size: 10
         text "#{client.vat_number.split('|')[0]}", size: 10
-        text "#{client.vat_number.split('|')[1]}", size: 10
+        dl_no = client.vat_number.split('|')[1]
+        text "#{dl_no.split(',')[0..1].join(",")}", size: 10
+        text "#{dl_no.split(',')[2..-1].join(",")}", size: 10
       end
     end
   end
@@ -71,7 +74,7 @@ class InvoiceDocument < Prawn::Document
     rows = []
     invoice.invoice_line_items.each_with_index do |item, index|
       row = [index + 1, item.item_name || item.item.item_name, item.pack,
-        item.item.quantity.to_f, item.batch, item.expiry, item.hsn, number_to_currency(item.mrp, unit: invoice.currency.code),
+        item.item_quantity.to_f, item.batch, item.expiry, item.hsn, number_to_currency(item.mrp, unit: invoice.currency.code),
         number_to_currency(item.rate, unit: invoice.currency.code), number_to_currency(item.discount.round(2), unit: invoice.currency.code),
         item_cgst(item), item_sgst(item), number_to_currency(item.amount, unit: invoice.currency.code),
         number_to_currency(item.net_amount, unit: invoice.currency.code)]
