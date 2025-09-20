@@ -38,7 +38,7 @@ WORKDIR $RAILS_ROOT
 
 RUN curl -L https://www.npmjs.com/install.sh | sh \
 && npm cache clean --force \
-&& rm -rf node_modules package-lock.json \
+&& rm -rf node_modules package-lock.json tmp \
 && npm install puppeteer \
 && npm cache clean --force
 
@@ -53,7 +53,6 @@ COPY . .
 
 # Install the gems specified in the Gemfile
 RUN bundle install
-
 # Precompile assets for production
 RUN bundle exec rake assets:precompile
 
