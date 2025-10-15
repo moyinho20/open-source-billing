@@ -2,17 +2,16 @@
 set -e
 
 BACKUP_DIR="/backups"
-DB_NAME="${MYSQL_DATABASE}"
-DB_USER="${MYSQL_USER}"
-DB_PASSWORD="${MYSQL_PASSWORD}"
+DB_NAME="${POSTGRES_DB}"
+DB_USER="${POSTGRES_USER}"
 
-echo "Waiting for MySQL to be ready..."
-until mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1" &> /dev/null; do
-  echo "MySQL is unavailable - sleeping"
+echo "Waiting for PostgreSQL to be ready..."
+until pg_isready -U "$DB_USER" -d "$DB_NAME" &> /dev/null; do
+  echo "PostgreSQL is unavailable - sleeping"
   sleep 2
 done
 
-echo "MySQL is ready!"
+echo "PostgreSQL is ready!"
 
 LATEST_BACKUP=$(ls -t ${BACKUP_DIR}/*.sql 2>/dev/null | head -n 1)
 
@@ -22,10 +21,12 @@ else
   echo "Found backup file: $LATEST_BACKUP"
   echo "Restoring database from backup..."
   
-  mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "DROP DATABASE IF EXISTS ${DB_NAME};"
-  mysql -u"$DB_USER" -p"$DB_PASSWORD" -e "CREATE DATABASE ${DB_NAME};"
+  psql -U "$DB_USER" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$DB_NAME' AND pid <> pg_backend_pid();" || true
   
-  mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < "$LATEST_BACKUP"
+  psql -U "$DB_USER" -d postgres -c "DROP DATABASE IF EXISTS ${DB_NAME};"
+  psql -U "$DB_USER" -d postgres -c "CREATE DATABASE ${DB_NAME};"
+  
+  psql -U "$DB_USER" -d "$DB_NAME" < "$LATEST_BACKUP"
   
   echo "Database restored successfully from $LATEST_BACKUP"
 fi

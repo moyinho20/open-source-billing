@@ -2,9 +2,8 @@
 set -e
 
 BACKUP_DIR="/backups"
-DB_NAME="${MYSQL_DATABASE}"
-DB_USER="${MYSQL_USER}"
-DB_PASSWORD="${MYSQL_PASSWORD}"
+DB_NAME="${POSTGRES_DB}"
+DB_USER="${POSTGRES_USER}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="${BACKUP_DIR}/backup_${TIMESTAMP}.sql"
 
@@ -12,7 +11,7 @@ mkdir -p "${BACKUP_DIR}"
 
 echo "Creating database backup..."
 
-mysqldump -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" > "$BACKUP_FILE"
+pg_dump -U "$DB_USER" "$DB_NAME" > "$BACKUP_FILE"
 
 echo "Database backup created successfully: $BACKUP_FILE"
 

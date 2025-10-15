@@ -1,10 +1,10 @@
-# Docker Database Backup and Restore
+# Docker PostgreSQL Database Backup and Restore
 
-This document describes the automatic database backup and restore functionality for the Open Source Billing application.
+This document describes the automatic database backup and restore functionality for the Open Source Billing application using PostgreSQL.
 
 ## Overview
 
-The Docker setup now includes automatic database backup and restore capabilities:
+The Docker setup now includes automatic PostgreSQL database backup and restore capabilities:
 
 - **On startup (`docker-compose up`)**: Automatically restores from the latest backup if available
 - **On shutdown**: Creates a full backup before stopping containers
@@ -18,7 +18,7 @@ docker-compose up --build
 ```
 
 When the database container starts:
-1. MySQL initializes
+1. PostgreSQL initializes
 2. The system looks for the latest backup file in `/backups`
 3. If a backup exists, it automatically restores the database
 4. If no backup exists, it starts with a fresh database
@@ -83,10 +83,10 @@ Replace `open-source-billing_db_backups` with your actual volume name (check wit
 ```
 docker/
 ├── db/
-│   ├── Dockerfile              # Custom MySQL image with backup scripts
+│   ├── Dockerfile              # Custom PostgreSQL image with backup scripts
 │   └── scripts/
-│       ├── create-backup.sh    # Creates a database backup
-│       ├── restore-backup.sh   # Restores from latest backup
+│       ├── create-backup.sh    # Creates a database backup using pg_dump
+│       ├── restore-backup.sh   # Restores from latest backup using psql
 │       └── init-db.sh          # Runs on container initialization
 └── ...
 
@@ -116,8 +116,9 @@ Make sure you're using `./docker-backup.sh` instead of `docker-compose down`
 
 Check that:
 - The backup file exists in `/backups`
-- The backup file is a valid SQL dump
-- MySQL has enough disk space
+- The backup file is a valid PostgreSQL SQL dump (created with pg_dump)
+- PostgreSQL has enough disk space
+- Database encoding matches between backup and restore
 
 ### View container logs
 
