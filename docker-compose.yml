@@ -1,14 +1,25 @@
-version: '3'
+version: '3.8'
 services:
   db:
-    image: mysql/mysql-server:latest
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
     environment:
-      MYSQL_ROOT_PASSWORD: sergey
-      MYSQL_DATABASE: photo_app
-      MYSQL_USER: sergey
-      MYSQL_PASSWORD: sergey
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: open_source_billing_development
     ports:
-      - "3308:3308"
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_backups:/backups
+      - ./docker/db/scripts:/scripts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d open_source_billing_development"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
   web:
     build:
       context: .
@@ -18,7 +29,11 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - app
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+  
   app:
     build:
       context: .
@@ -29,8 +44,11 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     tty: true
+
 volumes:
-  data:
+  db_data:
+  db_backups:
   bundle:
