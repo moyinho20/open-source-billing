@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+LICENSE.md
+doc/
+wiki/
+
+# Logs
+log/
+*.log
+
+# Temporary files
+tmp/
+.DS_Store
+
+# Test files
+test/
+spec/
+
+# Development files
+.generators
+.rakeTasks
+.rbenv-gemsets
+
+# IDE/Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if using webpacker, these are rebuilt)
+node_modules/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Docker files (avoid recursive copy)
+docker-compose.yml
+compose-dev.yaml
+
+# Capistrano
+Capfile
+
+# Error logs
+yarn-error.log

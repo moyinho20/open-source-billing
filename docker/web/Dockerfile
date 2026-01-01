@@ -1,36 +1,51 @@
-FROM ruby:2.7.1
+# Build stage - install dependencies
+FROM ruby:2.7.2-slim AS builder
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-# RUN bundle config --global frozen 1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/osb
+WORKDIR /usr/src/osb
 
-#RUN apt-get update && apt-get install -y curl sudo mysql-client default-libmysqlclient-dev && curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash - && sudo apt-get install -y nodejs
-RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*
-#RUN apt-get -q update && apt-get -qy install netcat
+RUN gem install bundler --no-document
+
+COPY Gemfile Gemfile.lock ./
+COPY vendor/engines ./vendor/engines/
+
+RUN bundle config set --local deployment 'true' \
+    && bundle config set --local without 'development test' \
+    && bundle install --jobs 4 --retry 3 \
+    && rm -rf /usr/local/bundle/cache/*.gem \
+    && find /usr/local/bundle/gems/ -name "*.c" -delete \
+    && find /usr/local/bundle/gems/ -name "*.o" -delete
+
+# Runtime stage - minimal image
+FROM ruby:2.7.2-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    nodejs \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 RUN gem install bundler --no-document
 
 WORKDIR /usr/src/osb
 
+COPY --from=builder /usr/local/bundle /usr/local/bundle
 
-COPY Gemfile* /usr/src/osb/
-COPY Gemfile Gemfile.lock ./
-COPY vendor/engines ./vendor/engines/
-
-
-RUN bundle install
 COPY . /usr/src/osb
-
-
-
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
 
 COPY ./docker/web/wait-for-it.sh ./docker/web/wait-for-it.sh
 RUN chmod +x ./docker/web/wait-for-it.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]
