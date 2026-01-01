@@ -21,9 +21,10 @@ RUN gem install bundler -v 2.4.22 --no-document
 COPY Gemfile Gemfile.lock ./
 COPY vendor/engines ./vendor/engines/
 
-RUN bundle config set --local deployment 'true' \
-    && bundle config set --local without 'development test' \
-    && bundle install --jobs 4 --retry 3 \
+ENV BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT="development:test"
+
+RUN bundle install --jobs 4 --retry 3 \
     && rm -rf /usr/local/bundle/cache/*.gem \
     && find /usr/local/bundle/gems/ -name "*.c" -delete \
     && find /usr/local/bundle/gems/ -name "*.o" -delete
@@ -39,10 +40,15 @@ RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
 RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     libpq5 \
     nodejs \
+    shared-mime-info \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
 RUN gem install bundler -v 2.4.22 --no-document
+
+ENV BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT="development:test" \
+    PATH="/usr/local/bundle/bin:$PATH"
 
 WORKDIR /usr/src/osb
 
@@ -59,4 +65,4 @@ RUN chmod +x ./docker/web/wait-for-it.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]

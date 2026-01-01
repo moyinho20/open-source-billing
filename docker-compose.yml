@@ -23,14 +23,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
-    volumes:
-      - .:/myapp
-      - bundle:/usr/local/bundle
     ports:
       - "3000:3000"
     depends_on:
       - db
     tty: true
-volumes:
-  data:
-  bundle:
