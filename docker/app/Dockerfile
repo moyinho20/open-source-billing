@@ -1,16 +1,22 @@
 # Build stage - install dependencies
 FROM ruby:2.7.2-slim AS builder
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Fix for Debian Buster EOL - use archive repositories
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     nodejs \
     git \
+    shared-mime-info \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/osb
 
-RUN gem install bundler --no-document
+RUN gem install bundler -v 2.4.22 --no-document
 
 COPY Gemfile Gemfile.lock ./
 COPY vendor/engines ./vendor/engines/
@@ -25,13 +31,18 @@ RUN bundle config set --local deployment 'true' \
 # Runtime stage - minimal image
 FROM ruby:2.7.2-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
+# Fix for Debian Buster EOL - use archive repositories
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list
+
+RUN apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y --no-install-recommends \
+    libpq5 \
     nodejs \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN gem install bundler --no-document
+RUN gem install bundler -v 2.4.22 --no-document
 
 WORKDIR /usr/src/osb
 
