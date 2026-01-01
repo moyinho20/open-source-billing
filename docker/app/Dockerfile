@@ -59,4 +59,4 @@ RUN chmod +x ./docker/app/wait-for-it.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3001", "-e", "production"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000", "-e", "production"]
