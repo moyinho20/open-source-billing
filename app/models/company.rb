@@ -3,8 +3,8 @@ class Company < ApplicationRecord
   scope :multiple, lambda { |ids_list| where("id in (?)", ids_list.is_a?(String) ? ids_list.split(',') : [*ids_list]) }
   scope :created_at, -> (created_at) { where(created_at: created_at) }
 
-  mount_uploader :logo, ImageUploader
-  skip_callback :commit, :after, :remove_logo!
+  # mount_uploader :logo, ImageUploader
+  # skip_callback :commit, :after, :remove_logo!
 
   has_many :company_entities, :as => :parent
   has_one_attached :avatar

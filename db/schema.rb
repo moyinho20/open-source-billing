@@ -2,16 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_02_075650) do
-
+ActiveRecord::Schema[7.1].define(version: 2023_09_10_131623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,8 +42,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "admin_billing_rate_per_hour", precision: 10
     t.string "admin_user_name"
     t.string "admin_password"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "activities", force: :cascade do |t|
@@ -56,8 +55,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.text "parameters"
     t.string "recipient_type"
     t.bigint "recipient_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "is_read", default: false
     t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
     t.index ["owner_type", "owner_id"], name: "index_activities_on_owner_type_and_owner_id"
@@ -69,19 +68,19 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
 
   create_table "api_keys", force: :cascade do |t|
     t.string "access_token"
-    t.datetime "expires_at"
+    t.datetime "expires_at", precision: nil
     t.integer "user_id"
     t.boolean "active"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["access_token"], name: "index_api_keys_on_access_token", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
     t.string "category"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "client_contacts", force: :cascade do |t|
@@ -92,10 +91,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "home_phone"
     t.string "mobile_number"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "clients", force: :cascade do |t|
@@ -118,10 +117,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "fax"
     t.text "internal_notes"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.decimal "available_credit", precision: 8, scale: 2, default: "0.0"
     t.integer "currency_id"
     t.string "provider"
@@ -130,11 +129,11 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "vat_number"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.bigint "role_id"
@@ -160,11 +159,11 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "logo"
     t.string "company_tag_line"
     t.string "memo"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "base_currency_id", default: 1
     t.string "abbreviation"
     t.string "default_note"
@@ -182,8 +181,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "template_id"
     t.integer "parent_id"
     t.string "parent_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "company_entities", force: :cascade do |t|
@@ -191,16 +190,16 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "entity_type"
     t.integer "parent_id"
     t.string "parent_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "credit_payments", force: :cascade do |t|
     t.integer "payment_id"
     t.integer "invoice_id"
     t.decimal "amount", precision: 10, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "credit_id"
   end
 
@@ -208,8 +207,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "title"
     t.string "code"
     t.string "unit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -217,13 +216,13 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "attempts", default: 0
     t.text "handler"
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "recurring_profile_id"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
@@ -233,8 +232,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "email_from"
     t.string "subject"
     t.text "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "status"
     t.integer "torder"
     t.boolean "send_email", default: true
@@ -246,7 +245,7 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
 
   create_table "estimates", force: :cascade do |t|
     t.string "estimate_number"
-    t.datetime "estimate_date"
+    t.datetime "estimate_date", precision: nil
     t.string "po_number"
     t.decimal "discount_percentage", precision: 10, scale: 2
     t.integer "client_id"
@@ -258,10 +257,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "tax_amount", precision: 10, scale: 2
     t.decimal "estimate_total", precision: 10, scale: 2
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "discount_type"
     t.integer "company_id"
     t.integer "created_by"
@@ -275,26 +274,26 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
 
   create_table "expense_categories", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "provider_id"
   end
 
   create_table "expenses", force: :cascade do |t|
     t.float "amount"
-    t.datetime "expense_date"
+    t.datetime "expense_date", precision: nil
     t.integer "category_id"
     t.text "note"
     t.integer "client_id"
     t.string "archive_number"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.time "deleted_at"
     t.integer "tax_1"
     t.integer "tax_2"
     t.integer "company_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "provider_id"
   end
@@ -323,8 +322,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.boolean "tax_table", default: false
     t.bigint "user_id"
     t.bigint "client_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_introductions_on_client_id"
     t.index ["user_id"], name: "index_introductions_on_user_id"
   end
@@ -336,22 +335,21 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "item_description"
     t.decimal "item_unit_cost", precision: 10, scale: 2
     t.decimal "item_quantity", precision: 10, scale: 2
+    t.integer "tax_1"
+    t.integer "tax_2"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.integer "estimate_id"
-    t.integer "tax_2"
-    t.integer "tax_1"
     t.string "pack"
     t.string "batch"
     t.string "expiry"
     t.string "hsn"
     t.decimal "rate"
     t.decimal "mrp"
-    t.integer "free_item_quantity"
   end
 
   create_table "invoice_tasks", force: :cascade do |t|
@@ -360,13 +358,13 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "rate"
     t.float "hours"
     t.integer "invoice_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "invoices", force: :cascade do |t|
     t.string "invoice_number"
-    t.datetime "invoice_date"
+    t.datetime "invoice_date", precision: nil
     t.string "po_number"
     t.decimal "discount_percentage", precision: 10, scale: 2
     t.integer "client_id"
@@ -378,10 +376,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "tax_amount", precision: 10, scale: 2
     t.decimal "invoice_total", precision: 10, scale: 2
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "payment_terms_id"
     t.date "due_date"
     t.string "last_invoice_status"
@@ -403,31 +401,45 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "billing_month"
   end
 
+  create_table "item_stocks", force: :cascade do |t|
+    t.integer "available_quantity"
+    t.bigint "item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_item_stocks_on_item_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "item_name"
     t.string "item_description"
     t.decimal "unit_cost", precision: 10, scale: 2
     t.decimal "quantity", precision: 10, scale: 2
+    t.integer "tax_1"
+    t.integer "tax_2"
     t.boolean "track_inventory"
     t.integer "inventory"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.string "provider"
     t.string "provider_id"
-    t.integer "tax_2"
-    t.integer "tax_1"
+    t.string "batch"
+    t.string "expiry"
+    t.string "hsn"
+    t.decimal "mrp", precision: 10, scale: 2
+    t.decimal "ptr", precision: 10, scale: 2
+    t.decimal "discount", precision: 10, scale: 2
   end
 
   create_table "line_item_discounts", force: :cascade do |t|
     t.bigint "invoice_line_item_id"
     t.integer "discount_type"
     t.decimal "amount"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["invoice_line_item_id"], name: "index_line_item_discounts_on_invoice_line_item_id"
   end
 
@@ -436,11 +448,11 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "percentage"
     t.string "name"
     t.integer "tax_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
   end
 
   create_table "logs", force: :cascade do |t|
@@ -450,8 +462,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "notes"
     t.date "date"
     t.integer "company_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "provider_id"
     t.integer "user_id"
@@ -465,8 +477,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "password"
     t.boolean "enable_starttls_auto"
     t.bigint "company_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "from"
     t.string "openssl_verify_mode"
     t.boolean "tls", default: true
@@ -479,8 +491,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "token", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
-    t.datetime "created_at", null: false
-    t.datetime "revoked_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "revoked_at", precision: nil
     t.string "scopes"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
@@ -491,8 +503,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "token", null: false
     t.string "refresh_token"
     t.integer "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at", null: false
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
     t.string "scopes"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
@@ -505,16 +517,16 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "secret", null: false
     t.text "redirect_uri", null: false
     t.string "scopes", default: "", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   create_table "payment_terms", force: :cascade do |t|
     t.integer "number_of_days"
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "payments", force: :cascade do |t|
@@ -527,10 +539,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.boolean "send_payment_notification"
     t.boolean "paid_full"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.decimal "credit_applied", precision: 15, scale: 3
     t.integer "client_id"
     t.integer "company_id"
@@ -549,8 +561,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.boolean "can_read"
     t.string "entity_type"
     t.bigint "role_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["role_id"], name: "index_permissions_on_role_id"
   end
 
@@ -559,13 +571,13 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.text "description"
     t.float "rate"
     t.string "archive_number"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.integer "project_id"
     t.integer "task_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "start_date"
-    t.datetime "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "start_date", precision: nil
+    t.datetime "due_date", precision: nil
     t.float "hours"
     t.float "spent_time"
   end
@@ -581,19 +593,46 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "updated_by"
     t.integer "created_by"
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "provider_id"
+  end
+
+  create_table "purchase_order_items", force: :cascade do |t|
+    t.bigint "purchase_order_item_id"
+    t.bigint "item_id"
+    t.string "expiry"
+    t.integer "quantity"
+    t.decimal "rate", precision: 10, scale: 2
+    t.decimal "cgst", precision: 10, scale: 2
+    t.decimal "sgst", precision: 10, scale: 2
+    t.decimal "igst", precision: 10, scale: 2
+    t.decimal "total_payable", precision: 10, scale: 2
+    t.string "mfg_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_purchase_order_items_on_item_id"
+    t.index ["purchase_order_item_id"], name: "index_purchase_order_items_on_purchase_order_item_id"
+  end
+
+  create_table "purchase_orders", force: :cascade do |t|
+    t.decimal "net_total", precision: 10, scale: 2
+    t.decimal "sgst", precision: 10, scale: 2
+    t.decimal "cgst", precision: 10, scale: 2
+    t.decimal "igst", precision: 10, scale: 2
+    t.decimal "total_payable", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "recurring_frequencies", force: :cascade do |t|
     t.integer "number_of_days"
     t.string "title"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "recurring_profile_line_items", force: :cascade do |t|
@@ -605,15 +644,15 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "item_quantity", precision: 10, scale: 2
     t.integer "tax_1"
     t.integer "tax_2"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
   end
 
   create_table "recurring_profiles", force: :cascade do |t|
-    t.datetime "first_invoice_date"
+    t.datetime "first_invoice_date", precision: nil
     t.string "po_number"
     t.decimal "discount_percentage", precision: 10, scale: 2
     t.string "frequency"
@@ -627,18 +666,18 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "sub_total", precision: 10, scale: 2
     t.decimal "discount_amount", precision: 10, scale: 2
     t.decimal "tax_amount", precision: 10, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "invoice_number"
     t.string "discount_type"
     t.decimal "invoice_total", precision: 10, scale: 2
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.integer "payment_terms_id"
     t.integer "company_id"
     t.string "last_invoice_status"
-    t.datetime "last_sent_date"
+    t.datetime "last_sent_date", precision: nil
     t.integer "sent_invoices"
     t.integer "currency_id"
     t.integer "created_by"
@@ -646,14 +685,14 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
   end
 
   create_table "recurring_schedules", force: :cascade do |t|
-    t.datetime "next_invoice_date"
+    t.datetime "next_invoice_date", precision: nil
     t.string "frequency"
     t.integer "occurrences", default: 0
     t.string "delivery_option"
     t.integer "invoice_id"
     t.integer "generated_count", default: 0
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "enable_recurring", default: true
     t.integer "frequency_repetition"
     t.string "frequency_type"
@@ -663,8 +702,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "name"
     t.string "resource_type"
     t.bigint "resource_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "for_client", default: false
     t.boolean "deletable", default: true
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
@@ -679,8 +718,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "type"
     t.string "subject"
     t.text "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "notification_id"
     t.string "notification_type"
     t.integer "company_id"
@@ -689,8 +728,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
@@ -700,8 +739,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.text "value"
     t.integer "thing_id"
     t.string "thing_type", limit: 30
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
   end
 
@@ -712,10 +751,10 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.integer "created_by"
     t.integer "updated_by"
     t.string "archive_number"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.time "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "company_id"
     t.string "provider"
     t.string "provider_id"
@@ -728,13 +767,13 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.boolean "billable"
     t.float "rate"
     t.string "archive_number"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.time "deleted_at"
     t.integer "updated_by"
     t.integer "created_by"
     t.integer "project_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "provider_id"
   end
@@ -742,11 +781,11 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
   create_table "taxes", force: :cascade do |t|
     t.string "name"
     t.decimal "percentage", precision: 10, scale: 2
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "archive_number"
-    t.datetime "archived_at"
-    t.datetime "deleted_at"
+    t.datetime "archived_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.string "provider"
     t.string "provider_id"
   end
@@ -756,30 +795,30 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "name"
     t.float "rate"
     t.string "archive_number"
-    t.datetime "archived_at"
+    t.datetime "archived_at", precision: nil
     t.integer "project_id"
     t.integer "staff_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "password_salt"
     t.string "user_name"
     t.integer "current_company"
@@ -793,13 +832,21 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 
+  create_table "vendors", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "pan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 

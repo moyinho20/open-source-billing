@@ -67,7 +67,7 @@ class InvoicesController < ApplicationController
   end
 
   def new
-    @invoice = Services::InvoiceService.build_new_invoice(params)
+    @invoice = Invoice.new #Services::InvoiceService.build_new_invoice(params)
     authorize @invoice
     @client = Client.find params[:invoice_for_client] if params[:invoice_for_client].present?
     @client = @invoice.client if params[:id].present?

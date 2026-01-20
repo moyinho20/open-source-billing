@@ -18,6 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Open Source Billing.  If not, see <http://www.gnu.org/licenses/>.
 #
-require 'services/invoice_services/invoice_service'
-require 'services/invoice_services/invoice_bulk_actions_service'
-require 'services/payment_gateway/paypal_service'
+# require 'services/invoice_services/invoice_service'
+# require 'services/invoice_services/invoice_bulk_actions_service'
+# require 'services/payment_gateway/paypal_service'

@@ -18,12 +18,7 @@
   <!--- side main menu --->
   <div class="user_menu hidden">
     <ul class="side-menu scrollContainer">
-      <li>
-        <%= active_link_to edit_user_registration_path, title: "Change Password" do %>
-          <i class="material-icons">lock</i>
-          <span>Change Password</span>
-        <% end %>
-      </li>
+      
       <li>
         <%= active_link_to destroy_user_session_path, method: :delete, class: 'logout text-align' do %>
           <%= image_tag('ico-logout.svg', alt: t('header.links.logout'), width: 18)%>

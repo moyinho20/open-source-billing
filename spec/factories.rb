@@ -1,6 +1,6 @@
-require 'factory_girl'
+# require 'factory_bot' # Auto-loaded by rails
 require 'faker'
-FactoryGirl.define do  factory :recurring_frequency do
+FactoryBot.define do  factory :recurring_frequency do
     number_of_days 1
 title "MyString"
   end

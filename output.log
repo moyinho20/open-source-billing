@@ -1,0 +1,40 @@
+[DEPRECATION] This gem has been renamed to hashie-forbidden_attributes and will no longer be supported. Please switch to hashie-forbidden_attributes as soon as possible.
+      PaperTrail 10.3.1 is not compatible with ActiveRecord 7.1.6. We allow PT
+      contributors to install incompatible versions of ActiveRecord, and this
+      warning can be silenced with an environment variable, but this is a bad
+      idea for normal use. Please install a compatible version of ActiveRecord
+      instead (>= 4.2, < 6.1). Please see the discussion in paper_trail/compatibility.rb
+      for details.
+=> Booting Puma
+=> Rails 7.1.6 application starting in development 
+=> Run `bin/rails server --help` for more startup options
+/Users/moyinho20/shri/open-source-billing/app/helpers/invoices_helper.rb:358: warning: key :class is duplicated and overwritten on line 358
+/Users/moyinho20/shri/open-source-billing/vendor/engines/osb_api/app/api/v1/invoice_api.rb:449: warning: key :message is duplicated and overwritten on line 449
+Puma starting in single mode...
+* Puma version: 7.1.0 ("Neon Witch")
+* Ruby version: ruby 3.2.2 (2023-03-30 revision e51014f9c0) [arm64-darwin24]
+*  Min threads: 5
+*  Max threads: 5
+*  Environment: development
+*          PID: 5721
+* Listening on http://127.0.0.1:3000
+* Listening on http://[::1]:3000
+Use Ctrl-C to stop
+Started HEAD "/en/users/sign_in" for 127.0.0.1 at 2026-01-20 08:12:33 +0530
+  [1m[36mActiveRecord::SchemaMigration Load (338.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Devise::SessionsController#new as */*
+  Parameters: {"locale"=>"en"}
+  Rendering layout layouts/login.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/login
+  [1m[36mUser Exists? (178.9ms)[0m  [1m[34mSELECT 1 AS one FROM "users" LIMIT $1[0m  [["LIMIT", 1]]
+  ↳ app/views/devise/sessions/new.html.erb:39
+  Rendered devise/sessions/new.html.erb within layouts/login (Duration: 211.0ms | Allocations: 5657)
+[Webpacker] Everything's up-to-date. Nothing to do
+  Rendered layouts/_flash_messages.html.erb (Duration: 0.4ms | Allocations: 211)
+  Rendered layout layouts/login.html.erb (Duration: 258.6ms | Allocations: 9253)
+Completed 200 OK in 4877ms (Views: 94.0ms | ActiveRecord: 3453.1ms | Allocations: 36950)
+
+
+  [1m[36mTRANSACTION (180.0ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::SessionStore::Session Update (364.2ms)[0m  [1m[33mUPDATE "sessions" SET "data" = $1, "updated_at" = $2 WHERE "sessions"."id" = $3[0m  [["data", "BAh7BkkiEF9jc3JmX3Rva2VuBjoGRUZJIjAtQ3VRSUtxY1VwdDRVOFU5eF9Q\nU2lQVDJmclZCRW9kR0ItODRVODloNmtrBjsARg==\n"], ["updated_at", "2026-01-20 02:42:43.653850"], ["id", 5]]
+  [1m[36mTRANSACTION (179.6ms)[0m  [1m[35mCOMMIT[0m

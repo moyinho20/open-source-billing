@@ -1,7 +1,8 @@
+require 'date_formats'
 module Services
   #invoice related business logic will go here
   class EstimateService
-    include DateFormats
+    include ::DateFormats
     # build a new estimate object
     def self.build_new_estimate(params)
       date_format = self.new.date_format

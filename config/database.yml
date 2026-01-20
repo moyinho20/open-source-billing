@@ -3,16 +3,16 @@ default: &default
   adapter: postgresql
   pool: 5
   encoding: unicode
-  # host: localhost
-  # database: psql_development
-  # username: postgres
-  # password: password
+  host: localhost
+  database: psql_development
+  username: postgres
+  password: password
   # adapter: postgresql
   # encoding: unicode
-  username: postgres
-  password: "bindu123"
-  host: db
-  port: 5432
+  # username: postgres
+  # password: "bindu123"
+  # host: db
+  # port: 5432
   # port: 5432
   # host: db
   # pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>

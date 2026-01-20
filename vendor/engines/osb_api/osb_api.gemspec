@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
 
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 6.0.2.2"
-  s.add_dependency 'doorkeeper', '5.4.0'
-  s.add_dependency 'grape', '~> 1.3.3'
-  s.add_dependency 'grape-rabl', '~> 0.3.0'
+  s.add_dependency "rails", "~> 7.0"
+  s.add_dependency 'doorkeeper'
+  s.add_dependency 'grape'
+  s.add_dependency 'grape-rabl'
   # s.add_dependency 'grape-doorkeeper'
   s.add_dependency 'rack-cors'
   s.add_dependency 'grape-swagger'

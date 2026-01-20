@@ -104,7 +104,7 @@ module ApplicationHelper
   end
 
   def image_tag source, options={}
-    request.format.pdf? ? super(wicked_pdf_asset_path(source), options) : super(source, options)
+    # request.format.pdf? ? super(wicked_pdf_asset_path(source), options) : super(source, options)
   end
 
   def associate_account(controller, action, item)

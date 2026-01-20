@@ -1,7 +1,7 @@
 module Services
   class ImportQbClientService
-    include ClientsHelper
-    include PaymentsHelper
+    include ::ClientsHelper
+    include ::PaymentsHelper
     attr_accessor :email
 
     def import_data(options)

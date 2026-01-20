@@ -92,7 +92,7 @@ class Invoice < ApplicationRecord
   # archive and delete
   acts_as_archival
   acts_as_paranoid
-  has_paper_trail :on => [:update], :only => [:last_invoice_status], :if => Proc.new { |invoice| invoice.last_invoice_status == 'disputed' }
+  # has_paper_trail :on => [:update], :only => [:last_invoice_status], :if => Proc.new { |invoice| invoice.last_invoice_status == 'disputed' }
 
   paginates_per 10
 

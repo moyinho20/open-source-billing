@@ -29,7 +29,7 @@ class User < ApplicationRecord
   after_create :set_default_settings, :set_introduction
   before_save :reset_authentication_token, if: Proc.new { |record| record.persisted? && record.password_salt_changed? }
 
-  mount_uploader :avatar, ImageUploader
+  # mount_uploader :avatar, ImageUploader
 
   has_one :staff
   belongs_to :role
@@ -169,6 +169,6 @@ class User < ApplicationRecord
   end
 
   def profile_picture
-    avatar_url(:thumb) || 'img-user.png'
+    # avatar_url(:thumb) || 'img-user.png'
   end
 end
