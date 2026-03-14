@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ClientContact do
   let(:client) do
-    FactoryGirl.create(:client)
+    FactoryBot.create(:client)
   end
 
   let(:client_contact) do

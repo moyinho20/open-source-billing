@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_02_075650) do
+ActiveRecord::Schema.define(version: 2023_08_28_142520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,6 +336,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "item_description"
     t.decimal "item_unit_cost", precision: 10, scale: 2
     t.decimal "item_quantity", precision: 10, scale: 2
+    t.integer "tax_1"
+    t.integer "tax_2"
     t.string "archive_number"
     t.datetime "archived_at"
     t.datetime "deleted_at"
@@ -343,15 +345,12 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.datetime "updated_at", null: false
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.integer "estimate_id"
-    t.integer "tax_2"
-    t.integer "tax_1"
     t.string "pack"
     t.string "batch"
     t.string "expiry"
     t.string "hsn"
     t.decimal "rate"
     t.decimal "mrp"
-    t.integer "free_item_quantity"
   end
 
   create_table "invoice_tasks", force: :cascade do |t|
@@ -408,6 +407,8 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.string "item_description"
     t.decimal "unit_cost", precision: 10, scale: 2
     t.decimal "quantity", precision: 10, scale: 2
+    t.integer "tax_1"
+    t.integer "tax_2"
     t.boolean "track_inventory"
     t.integer "inventory"
     t.string "archive_number"
@@ -418,8 +419,12 @@ ActiveRecord::Schema.define(version: 2022_10_02_075650) do
     t.decimal "actual_price", precision: 10, scale: 2, default: "0.0"
     t.string "provider"
     t.string "provider_id"
-    t.integer "tax_2"
-    t.integer "tax_1"
+    t.string "batch"
+    t.string "expiry"
+    t.string "hsn"
+    t.decimal "mrp", precision: 10, scale: 2
+    t.decimal "ptr", precision: 10, scale: 2
+    t.decimal "discount", precision: 10, scale: 2
   end
 
   create_table "line_item_discounts", force: :cascade do |t|

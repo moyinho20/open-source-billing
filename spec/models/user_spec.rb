@@ -4,19 +4,19 @@ require 'spec_helper'
 describe User do
 
   let(:first_user) do
-    FactoryGirl.create(:user)
+    FactoryBot.create(:user)
   end
 
   let(:second_user) do
-    FactoryGirl.create(:user)
+    FactoryBot.create(:user)
   end
 
   let(:first_account) do
-    FactoryGirl.create(:account)
+    FactoryBot.create(:account)
   end
 
   let(:second_account) do
-    FactoryGirl.create(:account)
+    FactoryBot.create(:account)
   end
 
   describe User do

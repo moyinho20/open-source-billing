@@ -3,15 +3,15 @@ require 'rails_helper'
 describe CompanyEntity do
 
   let(:client) do
-    FactoryGirl.create(:client)
+    FactoryBot.create(:client)
   end
 
   let(:account) do
-    FactoryGirl.create(:account)
+    FactoryBot.create(:account)
   end
 
-  let(:company_entity) { FactoryGirl.create(:company_entity, parent: account) }
-  let(:company_entity) { FactoryGirl.create(:company_entity, entity: client) }
+  let(:company_entity) { FactoryBot.create(:company_entity, parent: account) }
+  let(:company_entity) { FactoryBot.create(:company_entity, entity: client) }
 
   subject{ company_entity }
 

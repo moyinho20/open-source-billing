@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Client do
   let(:client) do
-    FactoryGirl.create(:client)
+    FactoryBot.create(:client)
   end
 
   it { should have_many(:invoices) }
