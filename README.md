@@ -216,6 +216,78 @@ Customer Portal
 
 When a customer receive invoice/estimate through email, he will also receive a login link to see all of his invoices. By visiting that url he can login to his account or can create his account if he don't have one.  
 
+Deploying on Koyeb
+------------------
+
+You can deploy Open Source Billing on [Koyeb](https://www.koyeb.com/) using Docker.
+
+### Prerequisites
+
+- A [Koyeb account](https://app.koyeb.com/)
+- A PostgreSQL database (e.g., [Neon](https://neon.tech/), [Supabase](https://supabase.com/), or Koyeb's managed databases)
+
+### Quick Deploy
+
+1. Fork this repository to your GitHub account.
+2. In the Koyeb control panel, click **Create Service** and select **GitHub** as the deployment method.
+3. Select your forked repository and the `devin/koyeb-deployment` branch.
+4. Koyeb will automatically detect the `Dockerfile` and build the application.
+5. Configure the following **environment variables** in the Koyeb service settings:
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_HOST` | Yes | PostgreSQL database host |
+| `DATABASE_NAME` | Yes | PostgreSQL database name |
+| `DATABASE_USER` | Yes | PostgreSQL database username |
+| `DATABASE_PASSWORD` | Yes | PostgreSQL database password |
+| `DATABASE_PORT` | No | PostgreSQL port (default: 5432) |
+| `SECRET_KEY_BASE` | Yes | Rails secret key (generate with `rails secret`) |
+| `ENCRYPTION_KEY` | Yes | Encryption key for sensitive data |
+| `APP_HOST` | No | Your Koyeb app hostname (e.g., `your-app.koyeb.app`) |
+| `APP_PROTOCOL` | No | `https` (default) |
+| `PORT` | No | Server port (default: 8000) |
+| `RAILS_ENV` | No | `production` (default) |
+
+6. Set the **exposed port** to `8000`.
+7. Click **Deploy**.
+
+The entrypoint script automatically runs database migrations on startup. For the first deployment, the database will be initialized with `db:setup` which includes seeding.
+
+### Deploy using Koyeb CLI
+
+```bash
+koyeb service create open-source-billing \
+  --git github.com/<YOUR_USERNAME>/open-source-billing \
+  --git-branch devin/koyeb-deployment \
+  --git-docker-dockerfile Dockerfile \
+  --ports 8000:http \
+  --routes /:8000 \
+  --env DATABASE_HOST=<your_db_host> \
+  --env DATABASE_NAME=<your_db_name> \
+  --env DATABASE_USER=<your_db_user> \
+  --env DATABASE_PASSWORD=<your_db_password> \
+  --env SECRET_KEY_BASE=<your_secret_key> \
+  --env ENCRYPTION_KEY=<your_encryption_key> \
+  --env RAILS_ENV=production \
+  --env PORT=8000
+```
+
+### Deploy using koyeb.yaml
+
+A `koyeb.yaml` configuration file is included in the repository. Update the environment variable values and deploy:
+
+```bash
+koyeb service create --config koyeb.yaml
+```
+
+### Configuration Files
+
+- `Dockerfile` - Production Docker image for Koyeb deployment
+- `Procfile` - Process definitions for web and worker
+- `koyeb.yaml` - Koyeb service configuration template
+- `.env.example` - Documentation of all environment variables
+- `bin/docker-entrypoint` - Container entrypoint with auto-migration
+
 Contributing
 ------------
 

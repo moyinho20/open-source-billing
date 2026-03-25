@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker/
+docker-compose.yml
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+log/*
+
+# Temp files
+tmp/*
+
+# Node modules (will be installed during build)
+node_modules/
+
+# Test files
+spec/
+test/
+
+# Documentation
+*.md
+!README.md
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Bundle vendor (will be installed during build)
+vendor/bundle/
+
+# Public packs (will be compiled during build)
+public/packs/
+public/packs-test/

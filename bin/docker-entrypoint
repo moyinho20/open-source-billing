@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+# Remove a potentially pre-existing server.pid for Rails
+rm -f /app/tmp/pids/server.pid
+
+# Run database migrations if DATABASE_HOST is set
+if [ -n "$DATABASE_HOST" ]; then
+  echo "Running database migrations..."
+  bundle exec rails db:migrate 2>/dev/null || bundle exec rails db:setup
+fi
+
+# Execute the main process
+exec "$@"

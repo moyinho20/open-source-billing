@@ -1,24 +1,15 @@
 
 default: &default
   adapter: postgresql
-  pool: 100
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 100 } %>
   reaping_frequency: 10
   timeout: 5000
   encoding: unicode
-  # host: localhost
-  # database: psql_development
-  # username: postgres
-  # password: password
-  # adapter: postgresql
-  # encoding: unicode
   host: <%= ENV['DATABASE_HOST'] %>
   database: <%= ENV['DATABASE_NAME'] %>
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
-  # port: 5432
-  # host: db
-  # pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  # timeout: 5000
+  port: <%= ENV.fetch('DATABASE_PORT') { 5432 } %>
 development:
   <<: *default
 # # Warning: The database defined as "test" will be erased and
@@ -59,14 +50,5 @@ test:
   <<: *default
 #   database: billing_test
 
-production: 
+production:
   <<: *default
-#   database: billing_production
-
-# production:
-#   <<: *default
-  # database: hello_world_production
-  # username: hello_world
-  # password: <%= ENV['PRODUCTION_DATABASE_PASSWORD'] %>
-  # host: <%= ENV['PRODUCTION_DATABASE_HOST'] %>
-  # port: <%= ENV['PRODUCTION_DATABASE_PORT'] %>
