@@ -24,25 +24,24 @@ development:
     consumer_secret: YOUR_QUICKBOOKS_APP_CLIENT_SECRET
 
 production:
-  app_host: localhost # e.g. osb.mydomain.com
-  app_protocol: http
-  activemerchant_billing_mode: test
-  encryption_key: "h2s6KI/pXHBdTc+nm0X1kbHuQvhpmJOjlRzzHYXqXFDSbt1HJ7vIQiesu3KGGvSB4xQs1MJlAxWm8au9QmE/Fw=="
+  app_host: <%= ENV.fetch('APP_HOST', 'localhost') %>
+  app_protocol: <%= ENV.fetch('APP_PROTOCOL', 'https') %>
+  activemerchant_billing_mode: <%= ENV.fetch('ACTIVEMERCHANT_BILLING_MODE', 'production') %>
+  encryption_key: <%= ENV.fetch('ENCRYPTION_KEY', 'change-me-in-production') %>
 
   paypal:
-    enabled: false
-    url: https://www.paypal.com/cgi-bin/webscr?
-    business: YOUR_PAYPAL_BUSINESS
+    enabled: <%= ENV.fetch('PAYPAL_ENABLED', 'false') %>
+    url: <%= ENV.fetch('PAYPAL_URL', 'https://www.paypal.com/cgi-bin/webscr?') %>
+    business: <%= ENV.fetch('PAYPAL_BUSINESS', '') %>
 
   smtp_setting:
-    address: smtp.gmail.com
-    port: 587
+    address: <%= ENV.fetch('SMTP_ADDRESS', 'smtp.gmail.com') %>
+    port: <%= ENV.fetch('SMTP_PORT', '587') %>
     authentication: :plain
     enable_starttls_auto: true
-    user_name: YOUR_EMAIL_HERE
-    password: YOUR_PASSWORD_HERE
+    user_name: <%= ENV.fetch('SMTP_USER_NAME', '') %>
+    password: <%= ENV.fetch('SMTP_PASSWORD', '') %>
 
   quickbooks:
-    # QuickBooksApp account key and secret
-    consume_key: YOUR_QUICKBOOKS_APP_CLIENT_ID
-    consumer_secret: YOUR_QUICKBOOKS_APP_CLIENT_SECRET
+    consumer_key: <%= ENV.fetch('QUICKBOOKS_CONSUMER_KEY', '') %>
+    consumer_secret: <%= ENV.fetch('QUICKBOOKS_CONSUMER_SECRET', '') %>
